@@ -1,6 +1,6 @@
 from kube_triage.bundle import Bundle
 from kube_triage.models import Category
-from kube_triage.rules import _match_log, diagnose
+from kube_triage.rules import _match_texts, diagnose
 
 
 def _main(bundle: Bundle):
@@ -53,9 +53,24 @@ def test_crash_evidence_contains_matched_log_line(load):
     assert any("KeyError: 'DATABASE_URL'" in e.text for e in main.evidence)
 
 
-def test_match_log_prefers_specific_pattern():
+def test_match_texts_prefers_specific_pattern():
     log = "connecting to db\nKeyError: 'DB_HOST'\nconnection refused\n"
-    assert _match_log(log) == ("missing_env", "KeyError: 'DB_HOST'")
+    assert _match_texts([("logs/app", log)]) == ("missing_env", "logs/app", "KeyError: 'DB_HOST'")
+
+
+def test_match_texts_uses_termination_message_when_logs_are_empty():
+    # 実クラスタでは存在しないコマンドはログが空で、終了メッセージにだけ原因が残る
+    texts = [
+        ("logs/app", ""),
+        ("lastState.terminated.message", 'exec: "pythn": executable file not found in $PATH'),
+    ]
+    assert _match_texts(texts)[:2] == ("bad_command", "lastState.terminated.message")
+
+
+def test_init_container_failure_is_detected(load):
+    main = _main(load("18_init_container_failure"))
+    assert (main.category, main.subcause) == (Category.CRASH_LOOP, "dependency_unreachable")
+    assert "migrate" in main.title
 
 
 def test_unknown_when_nothing_matches():

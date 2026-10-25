@@ -48,6 +48,9 @@ class Bundle:
     def container_statuses(self) -> list[dict[str, Any]]:
         return self.pod.get("status", {}).get("containerStatuses", [])
 
+    def init_container_statuses(self) -> list[dict[str, Any]]:
+        return self.pod.get("status", {}).get("initContainerStatuses", [])
+
     def conditions(self) -> dict[str, dict[str, Any]]:
         return {c["type"]: c for c in self.pod.get("status", {}).get("conditions", [])}
 

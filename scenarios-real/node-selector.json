@@ -1,0 +1,161 @@
+{
+  "description": "kind で再現 (node-selector)",
+  "expected": {
+    "category": "UNSCHEDULABLE",
+    "subcause": "node_selector"
+  },
+  "pod": {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "annotations": {
+        "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"kind\":\"Pod\",\"metadata\":{\"annotations\":{\"triage-lab/expected\":\"UNSCHEDULABLE/node_selector\"},\"labels\":{\"app.kubernetes.io/part-of\":\"triage-lab\"},\"name\":\"node-selector\",\"namespace\":\"triage-lab\"},\"spec\":{\"containers\":[{\"image\":\"nginx:1.27\",\"name\":\"app\"}],\"nodeSelector\":{\"disktype\":\"nvme-does-not-exist\"},\"restartPolicy\":\"Always\"}}\n",
+        "triage-lab/expected": "UNSCHEDULABLE/node_selector"
+      },
+      "creationTimestamp": "2026-10-25T10:23:41Z",
+      "generation": 1,
+      "labels": {
+        "app.kubernetes.io/part-of": "triage-lab"
+      },
+      "name": "node-selector",
+      "namespace": "triage-lab",
+      "resourceVersion": "574",
+      "uid": "8c39e3ca-cac8-4cdb-94bc-8538c1cd3b6a"
+    },
+    "spec": {
+      "containers": [
+        {
+          "image": "nginx:1.27",
+          "imagePullPolicy": "IfNotPresent",
+          "name": "app",
+          "resources": {},
+          "terminationMessagePath": "/dev/termination-log",
+          "terminationMessagePolicy": "File",
+          "volumeMounts": [
+            {
+              "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+              "name": "kube-api-access-mj97n",
+              "readOnly": true
+            }
+          ]
+        }
+      ],
+      "dnsPolicy": "ClusterFirst",
+      "enableServiceLinks": true,
+      "nodeSelector": {
+        "disktype": "nvme-does-not-exist"
+      },
+      "preemptionPolicy": "PreemptLowerPriority",
+      "priority": 0,
+      "restartPolicy": "Always",
+      "schedulerName": "default-scheduler",
+      "securityContext": {},
+      "serviceAccount": "default",
+      "serviceAccountName": "default",
+      "terminationGracePeriodSeconds": 30,
+      "tolerations": [
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/not-ready",
+          "operator": "Exists",
+          "tolerationSeconds": 300
+        },
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/unreachable",
+          "operator": "Exists",
+          "tolerationSeconds": 300
+        }
+      ],
+      "volumes": [
+        {
+          "name": "kube-api-access-mj97n",
+          "projected": {
+            "defaultMode": 420,
+            "sources": [
+              {
+                "serviceAccountToken": {
+                  "expirationSeconds": 3607,
+                  "path": "token"
+                }
+              },
+              {
+                "configMap": {
+                  "items": [
+                    {
+                      "key": "ca.crt",
+                      "path": "ca.crt"
+                    }
+                  ],
+                  "name": "kube-root-ca.crt"
+                }
+              },
+              {
+                "downwardAPI": {
+                  "items": [
+                    {
+                      "fieldRef": {
+                        "apiVersion": "v1",
+                        "fieldPath": "metadata.namespace"
+                      },
+                      "path": "namespace"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "status": {
+      "conditions": [
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:41Z",
+          "message": "0/1 nodes are available: 1 node(s) didn't match Pod's node affinity/selector. preemption: 0/1 nodes are available: 1 Preemption is not helpful for scheduling.",
+          "observedGeneration": 1,
+          "reason": "Unschedulable",
+          "status": "False",
+          "type": "PodScheduled"
+        }
+      ],
+      "phase": "Pending",
+      "qosClass": "BestEffort"
+    }
+  },
+  "events": [
+    {
+      "apiVersion": "v1",
+      "count": 1,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:23:41Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "kind": "Pod",
+        "name": "node-selector",
+        "namespace": "triage-lab",
+        "resourceVersion": "571",
+        "uid": "8c39e3ca-cac8-4cdb-94bc-8538c1cd3b6a"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:23:41Z",
+      "message": "0/1 nodes are available: 1 node(s) didn't match Pod's node affinity/selector. preemption: 0/1 nodes are available: 1 Preemption is not helpful for scheduling.",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:23:41Z",
+        "name": "node-selector.18e1beb7531f30ad",
+        "namespace": "triage-lab",
+        "resourceVersion": "573",
+        "uid": "5b433e06-c5a0-4138-91ee-42870bf85acf"
+      },
+      "reason": "FailedScheduling",
+      "reportingComponent": "default-scheduler",
+      "reportingInstance": "",
+      "source": {
+        "component": "default-scheduler"
+      },
+      "type": "Warning"
+    }
+  ],
+  "logs": {}
+}

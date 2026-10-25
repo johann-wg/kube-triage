@@ -1,0 +1,394 @@
+{
+  "description": "kind で再現 (image-not-found)",
+  "expected": {
+    "category": "IMAGE_PULL",
+    "subcause": "image_not_found"
+  },
+  "pod": {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "annotations": {
+        "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"kind\":\"Pod\",\"metadata\":{\"annotations\":{\"triage-lab/expected\":\"IMAGE_PULL/image_not_found\"},\"labels\":{\"app.kubernetes.io/part-of\":\"triage-lab\"},\"name\":\"image-not-found\",\"namespace\":\"triage-lab\"},\"spec\":{\"containers\":[{\"image\":\"nginx:this-tag-does-not-exist-12345\",\"name\":\"app\"}],\"restartPolicy\":\"Always\"}}\n",
+        "triage-lab/expected": "IMAGE_PULL/image_not_found"
+      },
+      "creationTimestamp": "2026-10-25T10:23:40Z",
+      "generation": 1,
+      "labels": {
+        "app.kubernetes.io/part-of": "triage-lab"
+      },
+      "name": "image-not-found",
+      "namespace": "triage-lab",
+      "resourceVersion": "1417",
+      "uid": "540040d0-6984-4e6c-ae4b-72b4d67ccb94"
+    },
+    "spec": {
+      "containers": [
+        {
+          "image": "nginx:this-tag-does-not-exist-12345",
+          "imagePullPolicy": "IfNotPresent",
+          "name": "app",
+          "resources": {},
+          "terminationMessagePath": "/dev/termination-log",
+          "terminationMessagePolicy": "File",
+          "volumeMounts": [
+            {
+              "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+              "name": "kube-api-access-x6t4p",
+              "readOnly": true
+            }
+          ]
+        }
+      ],
+      "dnsPolicy": "ClusterFirst",
+      "enableServiceLinks": true,
+      "nodeName": "triage-lab-control-plane",
+      "preemptionPolicy": "PreemptLowerPriority",
+      "priority": 0,
+      "restartPolicy": "Always",
+      "schedulerName": "default-scheduler",
+      "securityContext": {},
+      "serviceAccount": "default",
+      "serviceAccountName": "default",
+      "terminationGracePeriodSeconds": 30,
+      "tolerations": [
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/not-ready",
+          "operator": "Exists",
+          "tolerationSeconds": 300
+        },
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/unreachable",
+          "operator": "Exists",
+          "tolerationSeconds": 300
+        }
+      ],
+      "volumes": [
+        {
+          "name": "kube-api-access-x6t4p",
+          "projected": {
+            "defaultMode": 420,
+            "sources": [
+              {
+                "serviceAccountToken": {
+                  "expirationSeconds": 3607,
+                  "path": "token"
+                }
+              },
+              {
+                "configMap": {
+                  "items": [
+                    {
+                      "key": "ca.crt",
+                      "path": "ca.crt"
+                    }
+                  ],
+                  "name": "kube-root-ca.crt"
+                }
+              },
+              {
+                "downwardAPI": {
+                  "items": [
+                    {
+                      "fieldRef": {
+                        "apiVersion": "v1",
+                        "fieldPath": "metadata.namespace"
+                      },
+                      "path": "namespace"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "status": {
+      "conditions": [
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:42Z",
+          "observedGeneration": 1,
+          "status": "True",
+          "type": "PodReadyToStartContainers"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:40Z",
+          "observedGeneration": 1,
+          "status": "True",
+          "type": "Initialized"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:40Z",
+          "message": "containers with unready status: [app]",
+          "observedGeneration": 1,
+          "reason": "ContainersNotReady",
+          "status": "False",
+          "type": "Ready"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:40Z",
+          "message": "containers with unready status: [app]",
+          "observedGeneration": 1,
+          "reason": "ContainersNotReady",
+          "status": "False",
+          "type": "ContainersReady"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:40Z",
+          "observedGeneration": 1,
+          "status": "True",
+          "type": "PodScheduled"
+        }
+      ],
+      "containerStatuses": [
+        {
+          "image": "nginx:this-tag-does-not-exist-12345",
+          "imageID": "",
+          "lastState": {},
+          "name": "app",
+          "ready": false,
+          "restartCount": 0,
+          "started": false,
+          "state": {
+            "waiting": {
+              "message": "rpc error: code = NotFound desc = failed to pull and unpack image \"docker.io/library/nginx:this-tag-does-not-exist-12345\": failed to resolve reference \"docker.io/library/nginx:this-tag-does-not-exist-12345\": docker.io/library/nginx:this-tag-does-not-exist-12345: not found",
+              "reason": "ErrImagePull"
+            }
+          },
+          "volumeMounts": [
+            {
+              "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+              "name": "kube-api-access-x6t4p",
+              "readOnly": true,
+              "recursiveReadOnly": "Disabled"
+            }
+          ]
+        }
+      ],
+      "hostIP": "172.18.0.2",
+      "hostIPs": [
+        {
+          "ip": "172.18.0.2"
+        }
+      ],
+      "observedGeneration": 1,
+      "phase": "Pending",
+      "podIP": "10.244.0.6",
+      "podIPs": [
+        {
+          "ip": "10.244.0.6"
+        }
+      ],
+      "qosClass": "BestEffort",
+      "resources": {},
+      "startTime": "2026-10-25T10:23:40Z"
+    }
+  },
+  "events": [
+    {
+      "apiVersion": "v1",
+      "count": 1,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:23:40Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "kind": "Pod",
+        "name": "image-not-found",
+        "namespace": "triage-lab",
+        "resourceVersion": "550",
+        "uid": "540040d0-6984-4e6c-ae4b-72b4d67ccb94"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:23:40Z",
+      "message": "Successfully assigned triage-lab/image-not-found to triage-lab-control-plane",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:23:40Z",
+        "name": "image-not-found.18e1beb730801a2b",
+        "namespace": "triage-lab",
+        "resourceVersion": "552",
+        "uid": "e11923c8-6d18-4539-a682-d1a325dbb9be"
+      },
+      "reason": "Scheduled",
+      "reportingComponent": "default-scheduler",
+      "reportingInstance": "",
+      "source": {
+        "component": "default-scheduler"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 5,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:23:42Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "image-not-found",
+        "namespace": "triage-lab",
+        "resourceVersion": "551",
+        "uid": "540040d0-6984-4e6c-ae4b-72b4d67ccb94"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:27:38Z",
+      "message": "Pulling image \"nginx:this-tag-does-not-exist-12345\"",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:23:42Z",
+        "name": "image-not-found.18e1beb790acebf9",
+        "namespace": "triage-lab",
+        "resourceVersion": "1380",
+        "uid": "f35a2d7a-35df-4154-948a-34292acc4668"
+      },
+      "reason": "Pulling",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 5,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:05Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "image-not-found",
+        "namespace": "triage-lab",
+        "resourceVersion": "551",
+        "uid": "540040d0-6984-4e6c-ae4b-72b4d67ccb94"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:27:41Z",
+      "message": "Failed to pull image \"nginx:this-tag-does-not-exist-12345\": rpc error: code = NotFound desc = failed to pull and unpack image \"docker.io/library/nginx:this-tag-does-not-exist-12345\": failed to resolve reference \"docker.io/library/nginx:this-tag-does-not-exist-12345\": docker.io/library/nginx:this-tag-does-not-exist-12345: not found",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:05Z",
+        "name": "image-not-found.18e1bebd14000772",
+        "namespace": "triage-lab",
+        "resourceVersion": "1385",
+        "uid": "12bd4825-2cb8-4020-87f8-ba86654fc412"
+      },
+      "reason": "Failed",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Warning"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 5,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:05Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "image-not-found",
+        "namespace": "triage-lab",
+        "resourceVersion": "551",
+        "uid": "540040d0-6984-4e6c-ae4b-72b4d67ccb94"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:27:41Z",
+      "message": "Error: ErrImagePull",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:05Z",
+        "name": "image-not-found.18e1bebd1403289d",
+        "namespace": "triage-lab",
+        "resourceVersion": "1386",
+        "uid": "312e4a35-7135-4cbe-8d87-70237f8cb5e9"
+      },
+      "reason": "Failed",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Warning"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 12,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:06Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "image-not-found",
+        "namespace": "triage-lab",
+        "resourceVersion": "551",
+        "uid": "540040d0-6984-4e6c-ae4b-72b4d67ccb94"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:27:51Z",
+      "message": "Back-off pulling image \"nginx:this-tag-does-not-exist-12345\"",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:06Z",
+        "name": "image-not-found.18e1bebd27277c68",
+        "namespace": "triage-lab",
+        "resourceVersion": "1416",
+        "uid": "b7331301-169f-4d1a-b5d5-5395fe6cd943"
+      },
+      "reason": "BackOff",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 12,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:06Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "image-not-found",
+        "namespace": "triage-lab",
+        "resourceVersion": "551",
+        "uid": "540040d0-6984-4e6c-ae4b-72b4d67ccb94"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:27:51Z",
+      "message": "Error: ImagePullBackOff",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:06Z",
+        "name": "image-not-found.18e1bebd272b8153",
+        "namespace": "triage-lab",
+        "resourceVersion": "1418",
+        "uid": "40948d45-a744-457f-b567-67fbdae63d0a"
+      },
+      "reason": "Failed",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Warning"
+    }
+  ],
+  "logs": {}
+}

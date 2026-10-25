@@ -1,0 +1,368 @@
+{
+  "description": "kind で再現 (missing-configmap)",
+  "expected": {
+    "category": "CONFIG_ERROR",
+    "subcause": "missing_configmap"
+  },
+  "pod": {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "annotations": {
+        "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"kind\":\"Pod\",\"metadata\":{\"annotations\":{\"triage-lab/expected\":\"CONFIG_ERROR/missing_configmap\"},\"labels\":{\"app.kubernetes.io/part-of\":\"triage-lab\"},\"name\":\"missing-configmap\",\"namespace\":\"triage-lab\"},\"spec\":{\"containers\":[{\"envFrom\":[{\"configMapRef\":{\"name\":\"api-config\"}}],\"image\":\"nginx:1.27\",\"name\":\"app\"}],\"restartPolicy\":\"Always\"}}\n",
+        "triage-lab/expected": "CONFIG_ERROR/missing_configmap"
+      },
+      "creationTimestamp": "2026-10-25T10:23:40Z",
+      "generation": 1,
+      "labels": {
+        "app.kubernetes.io/part-of": "triage-lab"
+      },
+      "name": "missing-configmap",
+      "namespace": "triage-lab",
+      "resourceVersion": "676",
+      "uid": "353c0cac-1c7d-4708-bd9c-256367959404"
+    },
+    "spec": {
+      "containers": [
+        {
+          "envFrom": [
+            {
+              "configMapRef": {
+                "name": "api-config"
+              }
+            }
+          ],
+          "image": "nginx:1.27",
+          "imagePullPolicy": "IfNotPresent",
+          "name": "app",
+          "resources": {},
+          "terminationMessagePath": "/dev/termination-log",
+          "terminationMessagePolicy": "File",
+          "volumeMounts": [
+            {
+              "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+              "name": "kube-api-access-8j2xz",
+              "readOnly": true
+            }
+          ]
+        }
+      ],
+      "dnsPolicy": "ClusterFirst",
+      "enableServiceLinks": true,
+      "nodeName": "triage-lab-control-plane",
+      "preemptionPolicy": "PreemptLowerPriority",
+      "priority": 0,
+      "restartPolicy": "Always",
+      "schedulerName": "default-scheduler",
+      "securityContext": {},
+      "serviceAccount": "default",
+      "serviceAccountName": "default",
+      "terminationGracePeriodSeconds": 30,
+      "tolerations": [
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/not-ready",
+          "operator": "Exists",
+          "tolerationSeconds": 300
+        },
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/unreachable",
+          "operator": "Exists",
+          "tolerationSeconds": 300
+        }
+      ],
+      "volumes": [
+        {
+          "name": "kube-api-access-8j2xz",
+          "projected": {
+            "defaultMode": 420,
+            "sources": [
+              {
+                "serviceAccountToken": {
+                  "expirationSeconds": 3607,
+                  "path": "token"
+                }
+              },
+              {
+                "configMap": {
+                  "items": [
+                    {
+                      "key": "ca.crt",
+                      "path": "ca.crt"
+                    }
+                  ],
+                  "name": "kube-root-ca.crt"
+                }
+              },
+              {
+                "downwardAPI": {
+                  "items": [
+                    {
+                      "fieldRef": {
+                        "apiVersion": "v1",
+                        "fieldPath": "metadata.namespace"
+                      },
+                      "path": "namespace"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "status": {
+      "conditions": [
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:42Z",
+          "observedGeneration": 1,
+          "status": "True",
+          "type": "PodReadyToStartContainers"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:40Z",
+          "observedGeneration": 1,
+          "status": "True",
+          "type": "Initialized"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:40Z",
+          "message": "containers with unready status: [app]",
+          "observedGeneration": 1,
+          "reason": "ContainersNotReady",
+          "status": "False",
+          "type": "Ready"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:40Z",
+          "message": "containers with unready status: [app]",
+          "observedGeneration": 1,
+          "reason": "ContainersNotReady",
+          "status": "False",
+          "type": "ContainersReady"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:40Z",
+          "observedGeneration": 1,
+          "status": "True",
+          "type": "PodScheduled"
+        }
+      ],
+      "containerStatuses": [
+        {
+          "image": "nginx:1.27",
+          "imageID": "",
+          "lastState": {},
+          "name": "app",
+          "ready": false,
+          "restartCount": 0,
+          "started": false,
+          "state": {
+            "waiting": {
+              "message": "configmap \"api-config\" not found",
+              "reason": "CreateContainerConfigError"
+            }
+          },
+          "volumeMounts": [
+            {
+              "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+              "name": "kube-api-access-8j2xz",
+              "readOnly": true,
+              "recursiveReadOnly": "Disabled"
+            }
+          ]
+        }
+      ],
+      "hostIP": "172.18.0.2",
+      "hostIPs": [
+        {
+          "ip": "172.18.0.2"
+        }
+      ],
+      "observedGeneration": 1,
+      "phase": "Pending",
+      "podIP": "10.244.0.7",
+      "podIPs": [
+        {
+          "ip": "10.244.0.7"
+        }
+      ],
+      "qosClass": "BestEffort",
+      "resources": {},
+      "startTime": "2026-10-25T10:23:40Z"
+    }
+  },
+  "events": [
+    {
+      "apiVersion": "v1",
+      "count": 1,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:23:40Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "kind": "Pod",
+        "name": "missing-configmap",
+        "namespace": "triage-lab",
+        "resourceVersion": "553",
+        "uid": "353c0cac-1c7d-4708-bd9c-256367959404"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:23:40Z",
+      "message": "Successfully assigned triage-lab/missing-configmap to triage-lab-control-plane",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:23:40Z",
+        "name": "missing-configmap.18e1beb734e5cabb",
+        "namespace": "triage-lab",
+        "resourceVersion": "557",
+        "uid": "d53d3696-1ba1-46eb-8a32-fdd3bf22bbe1"
+      },
+      "reason": "Scheduled",
+      "reportingComponent": "default-scheduler",
+      "reportingInstance": "",
+      "source": {
+        "component": "default-scheduler"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 1,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:23:42Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "missing-configmap",
+        "namespace": "triage-lab",
+        "resourceVersion": "555",
+        "uid": "353c0cac-1c7d-4708-bd9c-256367959404"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:23:42Z",
+      "message": "Pulling image \"nginx:1.27\"",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:23:42Z",
+        "name": "missing-configmap.18e1beb79993202a",
+        "namespace": "triage-lab",
+        "resourceVersion": "607",
+        "uid": "f5072ba7-4e65-40e3-9775-995a2d27f8e8"
+      },
+      "reason": "Pulling",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 1,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:08Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "missing-configmap",
+        "namespace": "triage-lab",
+        "resourceVersion": "555",
+        "uid": "353c0cac-1c7d-4708-bd9c-256367959404"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:24:08Z",
+      "message": "Successfully pulled image \"nginx:1.27\" in 2.186s (25.72s including waiting). Image size: 72406859 bytes.",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:08Z",
+        "name": "missing-configmap.18e1bebd9653a951",
+        "namespace": "triage-lab",
+        "resourceVersion": "673",
+        "uid": "c429dfd3-d798-4cd2-bfb9-2e2d44f8ef17"
+      },
+      "reason": "Pulled",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 20,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:08Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "missing-configmap",
+        "namespace": "triage-lab",
+        "resourceVersion": "555",
+        "uid": "353c0cac-1c7d-4708-bd9c-256367959404"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:27:51Z",
+      "message": "Error: configmap \"api-config\" not found",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:08Z",
+        "name": "missing-configmap.18e1bebd96fe7b82",
+        "namespace": "triage-lab",
+        "resourceVersion": "1420",
+        "uid": "65ef729e-9748-4324-b498-5d8a66d0d229"
+      },
+      "reason": "Failed",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Warning"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 19,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:08Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "missing-configmap",
+        "namespace": "triage-lab",
+        "resourceVersion": "555",
+        "uid": "353c0cac-1c7d-4708-bd9c-256367959404"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:27:51Z",
+      "message": "Container image \"nginx:1.27\" already present on machine and can be accessed by the pod",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:08Z",
+        "name": "missing-configmap.18e1bebd9eb4e018",
+        "namespace": "triage-lab",
+        "resourceVersion": "1419",
+        "uid": "93750525-2e03-41d1-a714-c89ae35058f5"
+      },
+      "reason": "Pulled",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Normal"
+    }
+  ],
+  "logs": {}
+}

@@ -1,7 +1,7 @@
 | 指標 | 正解数 | 正解率 |
 |---|---|---|
-| カテゴリ | 17/18 | 94.4% |
-| カテゴリ + 原因 | 16/18 | 88.9% |
+| カテゴリ | 18/18 | 100.0% |
+| カテゴリ + 原因 | 17/18 | 94.4% |
 
 | シナリオ | 正解 | 判定 | 結果 |
 |---|---|---|---|
@@ -22,4 +22,4 @@
 | 15_crash_bad_command | CRASH_LOOP / bad_command | CRASH_LOOP / bad_command | OK |
 | 16_crash_permission | CRASH_LOOP / permission | CRASH_LOOP / permission | OK |
 | 17_crash_invalid_config | CRASH_LOOP / invalid_config | CRASH_LOOP | 原因NG |
-| 18_init_container_failure | CRASH_LOOP / dependency_unreachable | UNKNOWN | NG |
+| 18_init_container_failure | CRASH_LOOP / dependency_unreachable | CRASH_LOOP / dependency_unreachable | OK |

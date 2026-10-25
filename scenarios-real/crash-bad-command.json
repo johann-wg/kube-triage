@@ -1,0 +1,463 @@
+{
+  "description": "kind で再現 (crash-bad-command)",
+  "expected": {
+    "category": "CRASH_LOOP",
+    "subcause": "bad_command"
+  },
+  "pod": {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "annotations": {
+        "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"kind\":\"Pod\",\"metadata\":{\"annotations\":{\"triage-lab/expected\":\"CRASH_LOOP/bad_command\"},\"labels\":{\"app.kubernetes.io/part-of\":\"triage-lab\"},\"name\":\"crash-bad-command\",\"namespace\":\"triage-lab\"},\"spec\":{\"containers\":[{\"command\":[\"pythn\",\"app.py\"],\"image\":\"python:3.12-alpine\",\"name\":\"app\"}],\"restartPolicy\":\"Always\"}}\n",
+        "triage-lab/expected": "CRASH_LOOP/bad_command"
+      },
+      "creationTimestamp": "2026-10-25T10:23:41Z",
+      "generation": 1,
+      "labels": {
+        "app.kubernetes.io/part-of": "triage-lab"
+      },
+      "name": "crash-bad-command",
+      "namespace": "triage-lab",
+      "resourceVersion": "1347",
+      "uid": "a24f2f3c-363e-4e39-9955-1bf1f356e8e1"
+    },
+    "spec": {
+      "containers": [
+        {
+          "command": [
+            "pythn",
+            "app.py"
+          ],
+          "image": "python:3.12-alpine",
+          "imagePullPolicy": "IfNotPresent",
+          "name": "app",
+          "resources": {},
+          "terminationMessagePath": "/dev/termination-log",
+          "terminationMessagePolicy": "File",
+          "volumeMounts": [
+            {
+              "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+              "name": "kube-api-access-lm7s8",
+              "readOnly": true
+            }
+          ]
+        }
+      ],
+      "dnsPolicy": "ClusterFirst",
+      "enableServiceLinks": true,
+      "nodeName": "triage-lab-control-plane",
+      "preemptionPolicy": "PreemptLowerPriority",
+      "priority": 0,
+      "restartPolicy": "Always",
+      "schedulerName": "default-scheduler",
+      "securityContext": {},
+      "serviceAccount": "default",
+      "serviceAccountName": "default",
+      "terminationGracePeriodSeconds": 30,
+      "tolerations": [
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/not-ready",
+          "operator": "Exists",
+          "tolerationSeconds": 300
+        },
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/unreachable",
+          "operator": "Exists",
+          "tolerationSeconds": 300
+        }
+      ],
+      "volumes": [
+        {
+          "name": "kube-api-access-lm7s8",
+          "projected": {
+            "defaultMode": 420,
+            "sources": [
+              {
+                "serviceAccountToken": {
+                  "expirationSeconds": 3607,
+                  "path": "token"
+                }
+              },
+              {
+                "configMap": {
+                  "items": [
+                    {
+                      "key": "ca.crt",
+                      "path": "ca.crt"
+                    }
+                  ],
+                  "name": "kube-root-ca.crt"
+                }
+              },
+              {
+                "downwardAPI": {
+                  "items": [
+                    {
+                      "fieldRef": {
+                        "apiVersion": "v1",
+                        "fieldPath": "metadata.namespace"
+                      },
+                      "path": "namespace"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "status": {
+      "conditions": [
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:43Z",
+          "observedGeneration": 1,
+          "status": "True",
+          "type": "PodReadyToStartContainers"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:41Z",
+          "observedGeneration": 1,
+          "status": "True",
+          "type": "Initialized"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:41Z",
+          "message": "containers with unready status: [app]",
+          "observedGeneration": 1,
+          "reason": "ContainersNotReady",
+          "status": "False",
+          "type": "Ready"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:41Z",
+          "message": "containers with unready status: [app]",
+          "observedGeneration": 1,
+          "reason": "ContainersNotReady",
+          "status": "False",
+          "type": "ContainersReady"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:41Z",
+          "observedGeneration": 1,
+          "status": "True",
+          "type": "PodScheduled"
+        }
+      ],
+      "containerStatuses": [
+        {
+          "containerID": "containerd://d10c9738714b18066926a7b09dfe6df053b6e72e0dacab0514ca8a528876ae18",
+          "image": "docker.io/library/python:3.12-alpine",
+          "imageID": "docker.io/library/python@sha256:b658b05ce9c4eb97ec6fc19424818a1f31993659c2b505a532f470e83807815d",
+          "lastState": {
+            "terminated": {
+              "containerID": "containerd://d10c9738714b18066926a7b09dfe6df053b6e72e0dacab0514ca8a528876ae18",
+              "exitCode": 128,
+              "finishedAt": "2026-10-25T10:27:29Z",
+              "message": "failed to create containerd task: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: exec: \"pythn\": executable file not found in $PATH",
+              "reason": "StartError",
+              "startedAt": "1970-01-01T00:00:00Z"
+            }
+          },
+          "name": "app",
+          "ready": false,
+          "resources": {},
+          "restartCount": 5,
+          "started": false,
+          "state": {
+            "waiting": {
+              "message": "failed to create containerd task: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: exec: \"pythn\": executable file not found in $PATH",
+              "reason": "RunContainerError"
+            }
+          },
+          "user": {
+            "linux": {
+              "gid": 0,
+              "supplementalGroups": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                6,
+                10,
+                11,
+                20,
+                26,
+                27
+              ],
+              "uid": 0
+            }
+          },
+          "volumeMounts": [
+            {
+              "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+              "name": "kube-api-access-lm7s8",
+              "readOnly": true,
+              "recursiveReadOnly": "Disabled"
+            }
+          ]
+        }
+      ],
+      "hostIP": "172.18.0.2",
+      "hostIPs": [
+        {
+          "ip": "172.18.0.2"
+        }
+      ],
+      "observedGeneration": 1,
+      "phase": "Running",
+      "podIP": "10.244.0.14",
+      "podIPs": [
+        {
+          "ip": "10.244.0.14"
+        }
+      ],
+      "qosClass": "BestEffort",
+      "resources": {},
+      "startTime": "2026-10-25T10:23:41Z"
+    }
+  },
+  "events": [
+    {
+      "apiVersion": "v1",
+      "count": 1,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:23:41Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "kind": "Pod",
+        "name": "crash-bad-command",
+        "namespace": "triage-lab",
+        "resourceVersion": "590",
+        "uid": "a24f2f3c-363e-4e39-9955-1bf1f356e8e1"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:23:41Z",
+      "message": "Successfully assigned triage-lab/crash-bad-command to triage-lab-control-plane",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:23:41Z",
+        "name": "crash-bad-command.18e1beb77d3d0b15",
+        "namespace": "triage-lab",
+        "resourceVersion": "596",
+        "uid": "d885d40c-b86e-4eb9-8241-18acf03929d2"
+      },
+      "reason": "Scheduled",
+      "reportingComponent": "default-scheduler",
+      "reportingInstance": "",
+      "source": {
+        "component": "default-scheduler"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 1,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:23:43Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "crash-bad-command",
+        "namespace": "triage-lab",
+        "resourceVersion": "593",
+        "uid": "a24f2f3c-363e-4e39-9955-1bf1f356e8e1"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:23:43Z",
+      "message": "Pulling image \"python:3.12-alpine\"",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:23:43Z",
+        "name": "crash-bad-command.18e1beb7ec9ecfe4",
+        "namespace": "triage-lab",
+        "resourceVersion": "624",
+        "uid": "2638e3c5-9dc7-4482-be3c-1c2ad301e015"
+      },
+      "reason": "Pulling",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 1,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:39Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "crash-bad-command",
+        "namespace": "triage-lab",
+        "resourceVersion": "593",
+        "uid": "a24f2f3c-363e-4e39-9955-1bf1f356e8e1"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:24:39Z",
+      "message": "Successfully pulled image \"python:3.12-alpine\" in 2.165s (55.558s including waiting). Image size: 18059920 bytes.",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:39Z",
+        "name": "crash-bad-command.18e1bec4dbd2c9aa",
+        "namespace": "triage-lab",
+        "resourceVersion": "789",
+        "uid": "099d59ea-0a19-4603-8f33-f3a4b2209b5d"
+      },
+      "reason": "Pulled",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 6,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:39Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "crash-bad-command",
+        "namespace": "triage-lab",
+        "resourceVersion": "593",
+        "uid": "a24f2f3c-363e-4e39-9955-1bf1f356e8e1"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:27:29Z",
+      "message": "Container created",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:39Z",
+        "name": "crash-bad-command.18e1bec4e0af5b6d",
+        "namespace": "triage-lab",
+        "resourceVersion": "1344",
+        "uid": "df9e80f1-0591-4478-af02-a8fc4824d308"
+      },
+      "reason": "Created",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 6,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:39Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "crash-bad-command",
+        "namespace": "triage-lab",
+        "resourceVersion": "593",
+        "uid": "a24f2f3c-363e-4e39-9955-1bf1f356e8e1"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:27:29Z",
+      "message": "Error: failed to create containerd task: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: exec: \"pythn\": executable file not found in $PATH",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:39Z",
+        "name": "crash-bad-command.18e1bec4e6a0d15f",
+        "namespace": "triage-lab",
+        "resourceVersion": "1345",
+        "uid": "a2bc444a-b9a1-4dec-8b96-9c5860e63d03"
+      },
+      "reason": "Failed",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Warning"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 5,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:40Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "crash-bad-command",
+        "namespace": "triage-lab",
+        "resourceVersion": "593",
+        "uid": "a24f2f3c-363e-4e39-9955-1bf1f356e8e1"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:27:28Z",
+      "message": "Container image \"python:3.12-alpine\" already present on machine and can be accessed by the pod",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:40Z",
+        "name": "crash-bad-command.18e1bec51b3f14f5",
+        "namespace": "triage-lab",
+        "resourceVersion": "1343",
+        "uid": "bd9bc9ee-cbbf-4f07-ad14-f9981c2f6234"
+      },
+      "reason": "Pulled",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 7,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:41Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "crash-bad-command",
+        "namespace": "triage-lab",
+        "resourceVersion": "593",
+        "uid": "a24f2f3c-363e-4e39-9955-1bf1f356e8e1"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:27:29Z",
+      "message": "Back-off restarting failed container app in pod crash-bad-command_triage-lab(a24f2f3c-363e-4e39-9955-1bf1f356e8e1)",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:41Z",
+        "name": "crash-bad-command.18e1bec557d01155",
+        "namespace": "triage-lab",
+        "resourceVersion": "1346",
+        "uid": "5a5c178d-3e69-42e3-bfe3-838941b8732c"
+      },
+      "reason": "BackOff",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Warning"
+    }
+  ],
+  "logs": {
+    "app": "\n"
+  }
+}

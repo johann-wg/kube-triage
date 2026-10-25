@@ -1,0 +1,466 @@
+{
+  "description": "kind で再現 (crash-missing-env)",
+  "expected": {
+    "category": "CRASH_LOOP",
+    "subcause": "missing_env"
+  },
+  "pod": {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "annotations": {
+        "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"kind\":\"Pod\",\"metadata\":{\"annotations\":{\"triage-lab/expected\":\"CRASH_LOOP/missing_env\"},\"labels\":{\"app.kubernetes.io/part-of\":\"triage-lab\"},\"name\":\"crash-missing-env\",\"namespace\":\"triage-lab\"},\"spec\":{\"containers\":[{\"command\":[\"python\",\"-c\",\"import os; DB_URL = os.environ['DATABASE_URL']\"],\"image\":\"python:3.12-alpine\",\"name\":\"app\"}],\"restartPolicy\":\"Always\"}}\n",
+        "triage-lab/expected": "CRASH_LOOP/missing_env"
+      },
+      "creationTimestamp": "2026-10-25T10:23:41Z",
+      "generation": 1,
+      "labels": {
+        "app.kubernetes.io/part-of": "triage-lab"
+      },
+      "name": "crash-missing-env",
+      "namespace": "triage-lab",
+      "resourceVersion": "1375",
+      "uid": "734f6c03-90fe-4df3-b679-1234990b8e0a"
+    },
+    "spec": {
+      "containers": [
+        {
+          "command": [
+            "python",
+            "-c",
+            "import os; DB_URL = os.environ['DATABASE_URL']"
+          ],
+          "image": "python:3.12-alpine",
+          "imagePullPolicy": "IfNotPresent",
+          "name": "app",
+          "resources": {},
+          "terminationMessagePath": "/dev/termination-log",
+          "terminationMessagePolicy": "File",
+          "volumeMounts": [
+            {
+              "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+              "name": "kube-api-access-4cmww",
+              "readOnly": true
+            }
+          ]
+        }
+      ],
+      "dnsPolicy": "ClusterFirst",
+      "enableServiceLinks": true,
+      "nodeName": "triage-lab-control-plane",
+      "preemptionPolicy": "PreemptLowerPriority",
+      "priority": 0,
+      "restartPolicy": "Always",
+      "schedulerName": "default-scheduler",
+      "securityContext": {},
+      "serviceAccount": "default",
+      "serviceAccountName": "default",
+      "terminationGracePeriodSeconds": 30,
+      "tolerations": [
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/not-ready",
+          "operator": "Exists",
+          "tolerationSeconds": 300
+        },
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/unreachable",
+          "operator": "Exists",
+          "tolerationSeconds": 300
+        }
+      ],
+      "volumes": [
+        {
+          "name": "kube-api-access-4cmww",
+          "projected": {
+            "defaultMode": 420,
+            "sources": [
+              {
+                "serviceAccountToken": {
+                  "expirationSeconds": 3607,
+                  "path": "token"
+                }
+              },
+              {
+                "configMap": {
+                  "items": [
+                    {
+                      "key": "ca.crt",
+                      "path": "ca.crt"
+                    }
+                  ],
+                  "name": "kube-root-ca.crt"
+                }
+              },
+              {
+                "downwardAPI": {
+                  "items": [
+                    {
+                      "fieldRef": {
+                        "apiVersion": "v1",
+                        "fieldPath": "metadata.namespace"
+                      },
+                      "path": "namespace"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "status": {
+      "conditions": [
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:43Z",
+          "observedGeneration": 1,
+          "status": "True",
+          "type": "PodReadyToStartContainers"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:41Z",
+          "observedGeneration": 1,
+          "status": "True",
+          "type": "Initialized"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:27:36Z",
+          "message": "containers with unready status: [app]",
+          "observedGeneration": 1,
+          "reason": "ContainersNotReady",
+          "status": "False",
+          "type": "Ready"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:27:36Z",
+          "message": "containers with unready status: [app]",
+          "observedGeneration": 1,
+          "reason": "ContainersNotReady",
+          "status": "False",
+          "type": "ContainersReady"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:41Z",
+          "observedGeneration": 1,
+          "status": "True",
+          "type": "PodScheduled"
+        }
+      ],
+      "containerStatuses": [
+        {
+          "containerID": "containerd://54f7c22349d83c4e3dcb0f748e1a960d64bbc3d30600074a091a26fe7221aa76",
+          "image": "docker.io/library/python:3.12-alpine",
+          "imageID": "docker.io/library/python@sha256:b658b05ce9c4eb97ec6fc19424818a1f31993659c2b505a532f470e83807815d",
+          "lastState": {
+            "terminated": {
+              "containerID": "containerd://545df445c12cc2c2a1245ed8e8d055050602daf694db78ea78acbb065377ba90",
+              "exitCode": 1,
+              "finishedAt": "2026-10-25T10:26:12Z",
+              "reason": "Error",
+              "startedAt": "2026-10-25T10:26:12Z"
+            }
+          },
+          "name": "app",
+          "ready": false,
+          "resources": {},
+          "restartCount": 5,
+          "started": false,
+          "state": {
+            "terminated": {
+              "containerID": "containerd://54f7c22349d83c4e3dcb0f748e1a960d64bbc3d30600074a091a26fe7221aa76",
+              "exitCode": 1,
+              "finishedAt": "2026-10-25T10:27:36Z",
+              "reason": "Error",
+              "startedAt": "2026-10-25T10:27:36Z"
+            }
+          },
+          "user": {
+            "linux": {
+              "gid": 0,
+              "supplementalGroups": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                6,
+                10,
+                11,
+                20,
+                26,
+                27
+              ],
+              "uid": 0
+            }
+          },
+          "volumeMounts": [
+            {
+              "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+              "name": "kube-api-access-4cmww",
+              "readOnly": true,
+              "recursiveReadOnly": "Disabled"
+            }
+          ]
+        }
+      ],
+      "hostIP": "172.18.0.2",
+      "hostIPs": [
+        {
+          "ip": "172.18.0.2"
+        }
+      ],
+      "observedGeneration": 1,
+      "phase": "Running",
+      "podIP": "10.244.0.13",
+      "podIPs": [
+        {
+          "ip": "10.244.0.13"
+        }
+      ],
+      "qosClass": "BestEffort",
+      "resources": {},
+      "startTime": "2026-10-25T10:23:41Z"
+    }
+  },
+  "events": [
+    {
+      "apiVersion": "v1",
+      "count": 1,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:23:41Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "kind": "Pod",
+        "name": "crash-missing-env",
+        "namespace": "triage-lab",
+        "resourceVersion": "583",
+        "uid": "734f6c03-90fe-4df3-b679-1234990b8e0a"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:23:41Z",
+      "message": "Successfully assigned triage-lab/crash-missing-env to triage-lab-control-plane",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:23:41Z",
+        "name": "crash-missing-env.18e1beb76993dc4c",
+        "namespace": "triage-lab",
+        "resourceVersion": "585",
+        "uid": "3b824a0c-442d-45be-aae0-01652a3c35a6"
+      },
+      "reason": "Scheduled",
+      "reportingComponent": "default-scheduler",
+      "reportingInstance": "",
+      "source": {
+        "component": "default-scheduler"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 1,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:23:43Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "crash-missing-env",
+        "namespace": "triage-lab",
+        "resourceVersion": "584",
+        "uid": "734f6c03-90fe-4df3-b679-1234990b8e0a"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:23:43Z",
+      "message": "Pulling image \"python:3.12-alpine\"",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:23:43Z",
+        "name": "crash-missing-env.18e1beb7e5db80f2",
+        "namespace": "triage-lab",
+        "resourceVersion": "622",
+        "uid": "1489512c-92cd-4ea4-a755-73f72ca1324c"
+      },
+      "reason": "Pulling",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 1,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:37Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "crash-missing-env",
+        "namespace": "triage-lab",
+        "resourceVersion": "584",
+        "uid": "734f6c03-90fe-4df3-b679-1234990b8e0a"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:24:37Z",
+      "message": "Successfully pulled image \"python:3.12-alpine\" in 2.148s (53.506s including waiting). Image size: 18059920 bytes.",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:37Z",
+        "name": "crash-missing-env.18e1bec45ac0a4e3",
+        "namespace": "triage-lab",
+        "resourceVersion": "772",
+        "uid": "10345267-e492-43af-8ab5-9fe877f4085c"
+      },
+      "reason": "Pulled",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 6,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:37Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "crash-missing-env",
+        "namespace": "triage-lab",
+        "resourceVersion": "584",
+        "uid": "734f6c03-90fe-4df3-b679-1234990b8e0a"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:27:36Z",
+      "message": "Container created",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:37Z",
+        "name": "crash-missing-env.18e1bec45f5ed32c",
+        "namespace": "triage-lab",
+        "resourceVersion": "1371",
+        "uid": "1f20e59c-0df5-4342-93f2-5b333865dd8c"
+      },
+      "reason": "Created",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 6,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:37Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "crash-missing-env",
+        "namespace": "triage-lab",
+        "resourceVersion": "584",
+        "uid": "734f6c03-90fe-4df3-b679-1234990b8e0a"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:27:36Z",
+      "message": "Container started",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:37Z",
+        "name": "crash-missing-env.18e1bec4656bcb47",
+        "namespace": "triage-lab",
+        "resourceVersion": "1372",
+        "uid": "22525a65-7e6e-4749-bc59-34e9f3582277"
+      },
+      "reason": "Started",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 5,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:38Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "crash-missing-env",
+        "namespace": "triage-lab",
+        "resourceVersion": "584",
+        "uid": "734f6c03-90fe-4df3-b679-1234990b8e0a"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:27:35Z",
+      "message": "Container image \"python:3.12-alpine\" already present on machine and can be accessed by the pod",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:38Z",
+        "name": "crash-missing-env.18e1bec4a303ee71",
+        "namespace": "triage-lab",
+        "resourceVersion": "1369",
+        "uid": "25b967e4-9074-4df7-884a-c1912d946ccb"
+      },
+      "reason": "Pulled",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 5,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:39Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "crash-missing-env",
+        "namespace": "triage-lab",
+        "resourceVersion": "584",
+        "uid": "734f6c03-90fe-4df3-b679-1234990b8e0a"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:27:36Z",
+      "message": "Back-off restarting failed container app in pod crash-missing-env_triage-lab(734f6c03-90fe-4df3-b679-1234990b8e0a)",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:39Z",
+        "name": "crash-missing-env.18e1bec4df07b021",
+        "namespace": "triage-lab",
+        "resourceVersion": "1374",
+        "uid": "93373317-428d-42f4-a20c-94552395be56"
+      },
+      "reason": "BackOff",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Warning"
+    }
+  ],
+  "logs": {
+    "app": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"<frozen os>\", line 714, in __getitem__\nKeyError: 'DATABASE_URL'\n"
+  }
+}

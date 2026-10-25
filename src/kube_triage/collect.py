@@ -21,7 +21,7 @@ def _json(args: list[str]) -> Any:
 def collect(pod: str, namespace: str = "default", tail: int = 200) -> dict[str, Any]:
     """Pod / イベント / ログを取得して Bundle 形式の dict を返す.
 
-    再起動しているコンテナは直前の異常終了時のログ (--previous) を優先する。
+    initContainer も対象. ログは直前の異常終了時 (--previous) と現在の両方を取る。
     """
     pod_json = _json(["-n", namespace, "get", "pod", pod, "-o", "json"])
     events = _json(
@@ -37,14 +37,20 @@ def collect(pod: str, namespace: str = "default", tail: int = 200) -> dict[str, 
         ]
     ).get("items", [])
 
+    status = pod_json.get("status", {})
     logs: dict[str, str] = {}
-    for cs in pod_json.get("status", {}).get("containerStatuses", []):
+    for cs in status.get("initContainerStatuses", []) + status.get("containerStatuses", []):
         name = cs["name"]
         base = ["-n", namespace, "logs", pod, "-c", name, f"--tail={tail}"]
-        proc = _run([*base, "--previous"]) if cs.get("restartCount", 0) > 0 else None
-        if proc is None or proc.returncode != 0:
-            proc = _run(base)
-        if proc.returncode == 0:
-            logs[name] = proc.stdout
+        # 直前に終了したコンテナと現在のコンテナの両方を取る.
+        # 古いコンテナが削除済みだと --previous は終了コード 0 のまま
+        # "unable to retrieve container logs" を返すため、本文でも判定する.
+        parts = []
+        for args in ([*base, "--previous"], base):
+            proc = _run(args)
+            if proc.returncode == 0 and not proc.stdout.startswith("unable to retrieve"):
+                parts.append(proc.stdout)
+        if parts:
+            logs[name] = "\n".join(parts)
 
     return {"pod": pod_json, "events": events, "logs": logs}

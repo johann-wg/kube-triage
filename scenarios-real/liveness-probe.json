@@ -1,0 +1,532 @@
+{
+  "description": "kind で再現 (liveness-probe)",
+  "expected": {
+    "category": "PROBE_FAILURE",
+    "subcause": "liveness"
+  },
+  "pod": {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "annotations": {
+        "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"kind\":\"Pod\",\"metadata\":{\"annotations\":{\"triage-lab/expected\":\"PROBE_FAILURE/liveness\"},\"labels\":{\"app.kubernetes.io/part-of\":\"triage-lab\"},\"name\":\"liveness-probe\",\"namespace\":\"triage-lab\"},\"spec\":{\"containers\":[{\"command\":[\"sh\",\"-c\",\"echo 'Starting application...'; sleep 3600\"],\"image\":\"busybox:1.36\",\"livenessProbe\":{\"failureThreshold\":2,\"httpGet\":{\"path\":\"/healthz\",\"port\":8080},\"initialDelaySeconds\":3,\"periodSeconds\":3},\"name\":\"app\"}],\"restartPolicy\":\"Always\"}}\n",
+        "triage-lab/expected": "PROBE_FAILURE/liveness"
+      },
+      "creationTimestamp": "2026-10-25T10:23:41Z",
+      "generation": 1,
+      "labels": {
+        "app.kubernetes.io/part-of": "triage-lab"
+      },
+      "name": "liveness-probe",
+      "namespace": "triage-lab",
+      "resourceVersion": "1402",
+      "uid": "7a0a0ae1-6b8f-4f6d-bee4-0ca6fe5cab87"
+    },
+    "spec": {
+      "containers": [
+        {
+          "command": [
+            "sh",
+            "-c",
+            "echo 'Starting application...'; sleep 3600"
+          ],
+          "image": "busybox:1.36",
+          "imagePullPolicy": "IfNotPresent",
+          "livenessProbe": {
+            "failureThreshold": 2,
+            "httpGet": {
+              "path": "/healthz",
+              "port": 8080,
+              "scheme": "HTTP"
+            },
+            "initialDelaySeconds": 3,
+            "periodSeconds": 3,
+            "successThreshold": 1,
+            "timeoutSeconds": 1
+          },
+          "name": "app",
+          "resources": {},
+          "terminationMessagePath": "/dev/termination-log",
+          "terminationMessagePolicy": "File",
+          "volumeMounts": [
+            {
+              "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+              "name": "kube-api-access-pdv42",
+              "readOnly": true
+            }
+          ]
+        }
+      ],
+      "dnsPolicy": "ClusterFirst",
+      "enableServiceLinks": true,
+      "nodeName": "triage-lab-control-plane",
+      "preemptionPolicy": "PreemptLowerPriority",
+      "priority": 0,
+      "restartPolicy": "Always",
+      "schedulerName": "default-scheduler",
+      "securityContext": {},
+      "serviceAccount": "default",
+      "serviceAccountName": "default",
+      "terminationGracePeriodSeconds": 30,
+      "tolerations": [
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/not-ready",
+          "operator": "Exists",
+          "tolerationSeconds": 300
+        },
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/unreachable",
+          "operator": "Exists",
+          "tolerationSeconds": 300
+        }
+      ],
+      "volumes": [
+        {
+          "name": "kube-api-access-pdv42",
+          "projected": {
+            "defaultMode": 420,
+            "sources": [
+              {
+                "serviceAccountToken": {
+                  "expirationSeconds": 3607,
+                  "path": "token"
+                }
+              },
+              {
+                "configMap": {
+                  "items": [
+                    {
+                      "key": "ca.crt",
+                      "path": "ca.crt"
+                    }
+                  ],
+                  "name": "kube-root-ca.crt"
+                }
+              },
+              {
+                "downwardAPI": {
+                  "items": [
+                    {
+                      "fieldRef": {
+                        "apiVersion": "v1",
+                        "fieldPath": "metadata.namespace"
+                      },
+                      "path": "namespace"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "status": {
+      "conditions": [
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:43Z",
+          "observedGeneration": 1,
+          "status": "True",
+          "type": "PodReadyToStartContainers"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:41Z",
+          "observedGeneration": 1,
+          "status": "True",
+          "type": "Initialized"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:27:45Z",
+          "message": "containers with unready status: [app]",
+          "observedGeneration": 1,
+          "reason": "ContainersNotReady",
+          "status": "False",
+          "type": "Ready"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:27:45Z",
+          "message": "containers with unready status: [app]",
+          "observedGeneration": 1,
+          "reason": "ContainersNotReady",
+          "status": "False",
+          "type": "ContainersReady"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:41Z",
+          "observedGeneration": 1,
+          "status": "True",
+          "type": "PodScheduled"
+        }
+      ],
+      "containerStatuses": [
+        {
+          "containerID": "containerd://b16403e95d2784847877a212a87a333cd55c1b2731f9cccce8641dc8442221be",
+          "image": "docker.io/library/busybox:1.36",
+          "imageID": "docker.io/library/busybox@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662",
+          "lastState": {
+            "terminated": {
+              "containerID": "containerd://b16403e95d2784847877a212a87a333cd55c1b2731f9cccce8641dc8442221be",
+              "exitCode": 137,
+              "finishedAt": "2026-10-25T10:27:44Z",
+              "reason": "Error",
+              "startedAt": "2026-10-25T10:27:06Z"
+            }
+          },
+          "name": "app",
+          "ready": false,
+          "resources": {},
+          "restartCount": 4,
+          "started": false,
+          "state": {
+            "waiting": {
+              "message": "back-off 40s restarting failed container=app pod=liveness-probe_triage-lab(7a0a0ae1-6b8f-4f6d-bee4-0ca6fe5cab87)",
+              "reason": "CrashLoopBackOff"
+            }
+          },
+          "user": {
+            "linux": {
+              "gid": 0,
+              "supplementalGroups": [
+                0,
+                10
+              ],
+              "uid": 0
+            }
+          },
+          "volumeMounts": [
+            {
+              "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+              "name": "kube-api-access-pdv42",
+              "readOnly": true,
+              "recursiveReadOnly": "Disabled"
+            }
+          ]
+        }
+      ],
+      "hostIP": "172.18.0.2",
+      "hostIPs": [
+        {
+          "ip": "172.18.0.2"
+        }
+      ],
+      "observedGeneration": 1,
+      "phase": "Running",
+      "podIP": "10.244.0.10",
+      "podIPs": [
+        {
+          "ip": "10.244.0.10"
+        }
+      ],
+      "qosClass": "BestEffort",
+      "resources": {},
+      "startTime": "2026-10-25T10:23:41Z"
+    }
+  },
+  "events": [
+    {
+      "apiVersion": "v1",
+      "count": 1,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:23:41Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "kind": "Pod",
+        "name": "liveness-probe",
+        "namespace": "triage-lab",
+        "resourceVersion": "575",
+        "uid": "7a0a0ae1-6b8f-4f6d-bee4-0ca6fe5cab87"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:23:41Z",
+      "message": "Successfully assigned triage-lab/liveness-probe to triage-lab-control-plane",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:23:41Z",
+        "name": "liveness-probe.18e1beb75b37c68e",
+        "namespace": "triage-lab",
+        "resourceVersion": "577",
+        "uid": "96b67d27-093f-4320-bed5-ff61726990a3"
+      },
+      "reason": "Scheduled",
+      "reportingComponent": "default-scheduler",
+      "reportingInstance": "",
+      "source": {
+        "component": "default-scheduler"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 1,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:23:43Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "liveness-probe",
+        "namespace": "triage-lab",
+        "resourceVersion": "576",
+        "uid": "7a0a0ae1-6b8f-4f6d-bee4-0ca6fe5cab87"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:23:43Z",
+      "message": "Pulling image \"busybox:1.36\"",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:23:43Z",
+        "name": "liveness-probe.18e1beb7cf97c75d",
+        "namespace": "triage-lab",
+        "resourceVersion": "615",
+        "uid": "379bffbc-e282-44ef-b93e-5fb5e28c6feb"
+      },
+      "reason": "Pulling",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 1,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:30Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "liveness-probe",
+        "namespace": "triage-lab",
+        "resourceVersion": "576",
+        "uid": "7a0a0ae1-6b8f-4f6d-bee4-0ca6fe5cab87"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:24:30Z",
+      "message": "Successfully pulled image \"busybox:1.36\" in 7.859s (46.858s including waiting). Image size: 2217006 bytes.",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:30Z",
+        "name": "liveness-probe.18e1bec2b8381479",
+        "namespace": "triage-lab",
+        "resourceVersion": "732",
+        "uid": "b0694dd8-3313-4f4f-8975-feeb790df8b5"
+      },
+      "reason": "Pulled",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 5,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:30Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "liveness-probe",
+        "namespace": "triage-lab",
+        "resourceVersion": "576",
+        "uid": "7a0a0ae1-6b8f-4f6d-bee4-0ca6fe5cab87"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:27:05Z",
+      "message": "Container created",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:30Z",
+        "name": "liveness-probe.18e1bec2be2618a3",
+        "namespace": "triage-lab",
+        "resourceVersion": "1275",
+        "uid": "7ff40e83-c279-44e1-8cdc-a75daa4ed686"
+      },
+      "reason": "Created",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 5,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:30Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "liveness-probe",
+        "namespace": "triage-lab",
+        "resourceVersion": "576",
+        "uid": "7a0a0ae1-6b8f-4f6d-bee4-0ca6fe5cab87"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:27:06Z",
+      "message": "Container started",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:30Z",
+        "name": "liveness-probe.18e1bec2c628259e",
+        "namespace": "triage-lab",
+        "resourceVersion": "1278",
+        "uid": "5fd66259-6fe7-4b8e-bcd4-d801955e5ac4"
+      },
+      "reason": "Started",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 10,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:35Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "liveness-probe",
+        "namespace": "triage-lab",
+        "resourceVersion": "576",
+        "uid": "7a0a0ae1-6b8f-4f6d-bee4-0ca6fe5cab87"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:27:14Z",
+      "message": "Liveness probe failed: Get \"http://10.244.0.10:8080/healthz\": dial tcp 10.244.0.10:8080: connect: connection refused",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:35Z",
+        "name": "liveness-probe.18e1bec4061bfc79",
+        "namespace": "triage-lab",
+        "resourceVersion": "1304",
+        "uid": "95b80158-2515-4108-a347-39a11b6cbdbc"
+      },
+      "reason": "Unhealthy",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Warning"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 5,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:38Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "liveness-probe",
+        "namespace": "triage-lab",
+        "resourceVersion": "576",
+        "uid": "7a0a0ae1-6b8f-4f6d-bee4-0ca6fe5cab87"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:27:14Z",
+      "message": "Container app failed liveness probe, will be restarted",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:38Z",
+        "name": "liveness-probe.18e1bec4b8ed1d0f",
+        "namespace": "triage-lab",
+        "resourceVersion": "1305",
+        "uid": "62075869-6d89-4b90-ac40-2aa013e8a159"
+      },
+      "reason": "Killing",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 4,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:25:08Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "liveness-probe",
+        "namespace": "triage-lab",
+        "resourceVersion": "576",
+        "uid": "7a0a0ae1-6b8f-4f6d-bee4-0ca6fe5cab87"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:27:05Z",
+      "message": "Container image \"busybox:1.36\" already present on machine and can be accessed by the pod",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:25:08Z",
+        "name": "liveness-probe.18e1becbb990a452",
+        "namespace": "triage-lab",
+        "resourceVersion": "1274",
+        "uid": "190dbd97-f111-4c38-b3c4-76b19eb170da"
+      },
+      "reason": "Pulled",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 2,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:27:44Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "liveness-probe",
+        "namespace": "triage-lab",
+        "resourceVersion": "576",
+        "uid": "7a0a0ae1-6b8f-4f6d-bee4-0ca6fe5cab87"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:27:45Z",
+      "message": "Back-off restarting failed container app in pod liveness-probe_triage-lab(7a0a0ae1-6b8f-4f6d-bee4-0ca6fe5cab87)",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:27:44Z",
+        "name": "liveness-probe.18e1bef00b0dfb75",
+        "namespace": "triage-lab",
+        "resourceVersion": "1401",
+        "uid": "c85169ae-1c86-4258-b7bf-1a00b1cf856f"
+      },
+      "reason": "BackOff",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Warning"
+    }
+  ],
+  "logs": {
+    "app": "Starting application...\n\nStarting application...\n"
+  }
+}

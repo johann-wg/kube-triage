@@ -1,0 +1,162 @@
+{
+  "description": "kind で再現 (insufficient-memory)",
+  "expected": {
+    "category": "UNSCHEDULABLE",
+    "subcause": "insufficient_resources"
+  },
+  "pod": {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "annotations": {
+        "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"kind\":\"Pod\",\"metadata\":{\"annotations\":{\"triage-lab/expected\":\"UNSCHEDULABLE/insufficient_resources\"},\"labels\":{\"app.kubernetes.io/part-of\":\"triage-lab\"},\"name\":\"insufficient-memory\",\"namespace\":\"triage-lab\"},\"spec\":{\"containers\":[{\"image\":\"nginx:1.27\",\"name\":\"app\",\"resources\":{\"requests\":{\"memory\":\"500Gi\"}}}],\"restartPolicy\":\"Always\"}}\n",
+        "triage-lab/expected": "UNSCHEDULABLE/insufficient_resources"
+      },
+      "creationTimestamp": "2026-10-25T10:23:40Z",
+      "generation": 1,
+      "labels": {
+        "app.kubernetes.io/part-of": "triage-lab"
+      },
+      "name": "insufficient-memory",
+      "namespace": "triage-lab",
+      "resourceVersion": "565",
+      "uid": "f52bce90-5fcf-48d1-bf45-9195634475b0"
+    },
+    "spec": {
+      "containers": [
+        {
+          "image": "nginx:1.27",
+          "imagePullPolicy": "IfNotPresent",
+          "name": "app",
+          "resources": {
+            "requests": {
+              "memory": "500Gi"
+            }
+          },
+          "terminationMessagePath": "/dev/termination-log",
+          "terminationMessagePolicy": "File",
+          "volumeMounts": [
+            {
+              "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+              "name": "kube-api-access-cqqjm",
+              "readOnly": true
+            }
+          ]
+        }
+      ],
+      "dnsPolicy": "ClusterFirst",
+      "enableServiceLinks": true,
+      "preemptionPolicy": "PreemptLowerPriority",
+      "priority": 0,
+      "restartPolicy": "Always",
+      "schedulerName": "default-scheduler",
+      "securityContext": {},
+      "serviceAccount": "default",
+      "serviceAccountName": "default",
+      "terminationGracePeriodSeconds": 30,
+      "tolerations": [
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/not-ready",
+          "operator": "Exists",
+          "tolerationSeconds": 300
+        },
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/unreachable",
+          "operator": "Exists",
+          "tolerationSeconds": 300
+        }
+      ],
+      "volumes": [
+        {
+          "name": "kube-api-access-cqqjm",
+          "projected": {
+            "defaultMode": 420,
+            "sources": [
+              {
+                "serviceAccountToken": {
+                  "expirationSeconds": 3607,
+                  "path": "token"
+                }
+              },
+              {
+                "configMap": {
+                  "items": [
+                    {
+                      "key": "ca.crt",
+                      "path": "ca.crt"
+                    }
+                  ],
+                  "name": "kube-root-ca.crt"
+                }
+              },
+              {
+                "downwardAPI": {
+                  "items": [
+                    {
+                      "fieldRef": {
+                        "apiVersion": "v1",
+                        "fieldPath": "metadata.namespace"
+                      },
+                      "path": "namespace"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "status": {
+      "conditions": [
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:40Z",
+          "message": "0/1 nodes are available: 1 Insufficient memory. preemption: 0/1 nodes are available: 1 Preemption is not helpful for scheduling.",
+          "observedGeneration": 1,
+          "reason": "Unschedulable",
+          "status": "False",
+          "type": "PodScheduled"
+        }
+      ],
+      "phase": "Pending",
+      "qosClass": "Burstable"
+    }
+  },
+  "events": [
+    {
+      "apiVersion": "v1",
+      "count": 1,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:23:40Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "kind": "Pod",
+        "name": "insufficient-memory",
+        "namespace": "triage-lab",
+        "resourceVersion": "562",
+        "uid": "f52bce90-5fcf-48d1-bf45-9195634475b0"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:23:40Z",
+      "message": "0/1 nodes are available: 1 Insufficient memory. preemption: 0/1 nodes are available: 1 Preemption is not helpful for scheduling.",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:23:40Z",
+        "name": "insufficient-memory.18e1beb743cbda57",
+        "namespace": "triage-lab",
+        "resourceVersion": "564",
+        "uid": "fdf291b3-3d3a-4f27-88c0-99eb2d03cb8e"
+      },
+      "reason": "FailedScheduling",
+      "reportingComponent": "default-scheduler",
+      "reportingInstance": "",
+      "source": {
+        "component": "default-scheduler"
+      },
+      "type": "Warning"
+    }
+  ],
+  "logs": {}
+}

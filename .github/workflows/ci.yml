@@ -21,7 +21,10 @@ jobs:
       - run: ruff format --check .
       - run: pytest -q
       - name: 判定精度の評価 (カテゴリ正解率 90% 未満で失敗)
-        run: kube-triage eval scenarios --min-accuracy 0.9 --report eval-result.md
+        run: |
+          kube-triage eval scenarios-real --min-accuracy 0.9 --report eval-real.md
+          kube-triage eval scenarios --min-accuracy 0.9 --report eval-synthetic.md
       - name: 評価結果をジョブサマリーに表示
         if: matrix.python-version == '3.12'
-        run: cat eval-result.md >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          { echo "## 実データ"; cat eval-real.md; echo; echo "## 合成データ"; cat eval-synthetic.md; } >> "$GITHUB_STEP_SUMMARY"

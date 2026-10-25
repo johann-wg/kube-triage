@@ -54,7 +54,7 @@ OpenShift / Kubernetes 基盤の運用では、Pod が起動しないときに `
 ```
  Kubernetes ──(kubectl)──> collect ──> Bundle(JSON) ──> rules ──> report (テキスト / JSON)
                                                           ^
-                                   scenarios/*.json ──> eval (正解率の測定, CI で毎回実行)
+               scenarios/ + scenarios-real/ ──> eval (正解率の測定, CI で毎回実行)
 ```
 
 | モジュール | 役割 |
@@ -85,35 +85,49 @@ kube-triage eval scenarios
 
 ## 評価結果
 
-`scenarios/` の 18 シナリオに対する結果です（CI で毎回測定）。
+2 種類のシナリオ集で判定精度を測定しています（どちらも CI で毎回実行）。
 
-| 指標 | 正解数 | 正解率 |
+| シナリオ集 | 件数 | カテゴリ正解率 | カテゴリ + 原因 |
+|---|---|---|---|
+| 実データ（kind で障害を再現して収集） | 15 | 100.0% | 100.0% |
+| 合成データ（境界ケースを含む） | 18 | 100.0% | 94.4% |
+
+詳細: [実データ](docs/eval-real.md) / [合成データ](docs/eval-synthetic.md)
+
+### 実データで見つかった問題と改善
+
+最初は合成データだけでルールを作り、その後 [lab/](lab/README.md) で実際に障害を再現して評価しました。
+実データでの初回の結果は **カテゴリ + 原因 10/15（66.7%）** で、合成データでは見えなかった次の問題が分かりました。
+
+| 問題 | 原因 | 対応 |
 |---|---|---|
-| カテゴリ | 17/18 | 94.4% |
-| カテゴリ + 原因 | 16/18 | 88.9% |
+| CrashLoop の原因がほぼ判定できない | 古いコンテナが削除済みだと `kubectl logs --previous` が終了コード 0 のまま `unable to retrieve container logs` を返し、エラーログを取得できていなかった | 直前と現在の両方のログを取得し、本文でも取得失敗を判定 |
+| 存在しないコマンドを判定できない | 実際は終了コード 127 ではなく 128（`StartError`）で、ログは空。原因は `lastState.terminated.message` にだけ残る | ログに加えて終了メッセージ・待機メッセージも判定材料にする |
+| initContainer の失敗が UNKNOWN になる | `initContainerStatuses` を見ていなかった | initContainer を先に判定し、ログも収集する |
 
-全シナリオの結果は [docs/eval-result.md](docs/eval-result.md) を参照してください。
+改善後は 15/15 になりましたが、**ルール修正に使ったデータと評価データが同じ**であるため、未知の障害に対する精度を示すものではありません。
+今後は修正に使っていない障害シナリオを追加して評価します。
 
-### 既知の取りこぼし（今後の改善対象）
+### 既知の取りこぼし
 
 | シナリオ | 内容 | 取りこぼす理由 |
 |---|---|---|
 | `17_crash_invalid_config` | 設定値の誤りで異常終了 | ログの文言がアプリ固有で、汎用パターンに当たらない |
-| `18_init_container_failure` | initContainer の失敗 | 現行ルールは `initContainerStatuses` を見ていない |
 
 ### シナリオデータについて
 
-現在のシナリオは `kubectl get pod -o json` / `get events -o json` の構造を模した**合成データ**で、
-[scripts/generate_scenarios.py](scripts/generate_scenarios.py) から生成しています。
-次の段階で、kind クラスタ上で実際に障害を再現して収集したデータ（[lab/](lab/README.md)）に置き換えます。
+- `scenarios/`: [scripts/generate_scenarios.py](scripts/generate_scenarios.py) で生成した合成データ。実データでは再現しにくい境界ケース（認証エラー、taint など）を含む
+- `scenarios-real/`: ローカルの kind クラスタで [lab/manifests/](lab/manifests/) の障害を再現し、[scripts/collect_lab.py](scripts/collect_lab.py) で収集したデータ
+
 業務で扱った環境のデータは一切含みません。
 
 ## ロードマップ
 
 - [x] ルールベース判定 6 カテゴリ・評価シナリオ 18 件・CI
 - [x] kind クラスタで障害を再現するマニフェスト 15 件と収集スクリプト（[lab/](lab/README.md)）
-- [ ] 実データで再評価し、合成データとの差分をルールに反映
-- [ ] initContainer の判定に対応
+- [x] 実データで再評価し、合成データとの差分をルールと収集処理に反映
+- [x] initContainer の判定に対応
+- [ ] ルール修正に使っていない障害シナリオ（評価専用）を追加
 - [ ] ルールで判定できないケースのみ LLM に原因推定させ、ルールのみの場合と正解率を比較
 
 ## 開発

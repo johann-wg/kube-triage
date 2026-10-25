@@ -1,0 +1,450 @@
+{
+  "description": "kind で再現 (readiness-probe)",
+  "expected": {
+    "category": "PROBE_FAILURE",
+    "subcause": "readiness"
+  },
+  "pod": {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "annotations": {
+        "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"kind\":\"Pod\",\"metadata\":{\"annotations\":{\"triage-lab/expected\":\"PROBE_FAILURE/readiness\"},\"labels\":{\"app.kubernetes.io/part-of\":\"triage-lab\"},\"name\":\"readiness-probe\",\"namespace\":\"triage-lab\"},\"spec\":{\"containers\":[{\"image\":\"nginx:1.27\",\"name\":\"app\",\"readinessProbe\":{\"httpGet\":{\"path\":\"/ready\",\"port\":80},\"periodSeconds\":3}}],\"restartPolicy\":\"Always\"}}\n",
+        "triage-lab/expected": "PROBE_FAILURE/readiness"
+      },
+      "creationTimestamp": "2026-10-25T10:23:41Z",
+      "generation": 1,
+      "labels": {
+        "app.kubernetes.io/part-of": "triage-lab"
+      },
+      "name": "readiness-probe",
+      "namespace": "triage-lab",
+      "resourceVersion": "743",
+      "uid": "dee6e657-1cfb-4bcb-acdf-f8eddbcec485"
+    },
+    "spec": {
+      "containers": [
+        {
+          "image": "nginx:1.27",
+          "imagePullPolicy": "IfNotPresent",
+          "name": "app",
+          "readinessProbe": {
+            "failureThreshold": 3,
+            "httpGet": {
+              "path": "/ready",
+              "port": 80,
+              "scheme": "HTTP"
+            },
+            "periodSeconds": 3,
+            "successThreshold": 1,
+            "timeoutSeconds": 1
+          },
+          "resources": {},
+          "terminationMessagePath": "/dev/termination-log",
+          "terminationMessagePolicy": "File",
+          "volumeMounts": [
+            {
+              "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+              "name": "kube-api-access-7qdlj",
+              "readOnly": true
+            }
+          ]
+        }
+      ],
+      "dnsPolicy": "ClusterFirst",
+      "enableServiceLinks": true,
+      "nodeName": "triage-lab-control-plane",
+      "preemptionPolicy": "PreemptLowerPriority",
+      "priority": 0,
+      "restartPolicy": "Always",
+      "schedulerName": "default-scheduler",
+      "securityContext": {},
+      "serviceAccount": "default",
+      "serviceAccountName": "default",
+      "terminationGracePeriodSeconds": 30,
+      "tolerations": [
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/not-ready",
+          "operator": "Exists",
+          "tolerationSeconds": 300
+        },
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/unreachable",
+          "operator": "Exists",
+          "tolerationSeconds": 300
+        }
+      ],
+      "volumes": [
+        {
+          "name": "kube-api-access-7qdlj",
+          "projected": {
+            "defaultMode": 420,
+            "sources": [
+              {
+                "serviceAccountToken": {
+                  "expirationSeconds": 3607,
+                  "path": "token"
+                }
+              },
+              {
+                "configMap": {
+                  "items": [
+                    {
+                      "key": "ca.crt",
+                      "path": "ca.crt"
+                    }
+                  ],
+                  "name": "kube-root-ca.crt"
+                }
+              },
+              {
+                "downwardAPI": {
+                  "items": [
+                    {
+                      "fieldRef": {
+                        "apiVersion": "v1",
+                        "fieldPath": "metadata.namespace"
+                      },
+                      "path": "namespace"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "status": {
+      "conditions": [
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:43Z",
+          "observedGeneration": 1,
+          "status": "True",
+          "type": "PodReadyToStartContainers"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:41Z",
+          "observedGeneration": 1,
+          "status": "True",
+          "type": "Initialized"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:41Z",
+          "message": "containers with unready status: [app]",
+          "observedGeneration": 1,
+          "reason": "ContainersNotReady",
+          "status": "False",
+          "type": "Ready"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:41Z",
+          "message": "containers with unready status: [app]",
+          "observedGeneration": 1,
+          "reason": "ContainersNotReady",
+          "status": "False",
+          "type": "ContainersReady"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:41Z",
+          "observedGeneration": 1,
+          "status": "True",
+          "type": "PodScheduled"
+        }
+      ],
+      "containerStatuses": [
+        {
+          "containerID": "containerd://deee4dcb80324292b8694f693d012621980cc8721a11ddb5d5035b80d4183691",
+          "image": "docker.io/library/nginx:1.27",
+          "imageID": "docker.io/library/nginx@sha256:6784fb0834aa7dbbe12e3d7471e69c290df3e6ba810dc38b34ae33d3c1c05f7d",
+          "lastState": {},
+          "name": "app",
+          "ready": false,
+          "resources": {},
+          "restartCount": 0,
+          "started": true,
+          "state": {
+            "running": {
+              "startedAt": "2026-10-25T10:24:32Z"
+            }
+          },
+          "user": {
+            "linux": {
+              "gid": 0,
+              "supplementalGroups": [
+                0
+              ],
+              "uid": 0
+            }
+          },
+          "volumeMounts": [
+            {
+              "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+              "name": "kube-api-access-7qdlj",
+              "readOnly": true,
+              "recursiveReadOnly": "Disabled"
+            }
+          ]
+        }
+      ],
+      "hostIP": "172.18.0.2",
+      "hostIPs": [
+        {
+          "ip": "172.18.0.2"
+        }
+      ],
+      "observedGeneration": 1,
+      "phase": "Running",
+      "podIP": "10.244.0.11",
+      "podIPs": [
+        {
+          "ip": "10.244.0.11"
+        }
+      ],
+      "qosClass": "BestEffort",
+      "resources": {},
+      "startTime": "2026-10-25T10:23:41Z"
+    }
+  },
+  "events": [
+    {
+      "apiVersion": "v1",
+      "count": 1,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:23:41Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "kind": "Pod",
+        "name": "readiness-probe",
+        "namespace": "triage-lab",
+        "resourceVersion": "578",
+        "uid": "dee6e657-1cfb-4bcb-acdf-f8eddbcec485"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:23:41Z",
+      "message": "Successfully assigned triage-lab/readiness-probe to triage-lab-control-plane",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:23:41Z",
+        "name": "readiness-probe.18e1beb7620013a5",
+        "namespace": "triage-lab",
+        "resourceVersion": "581",
+        "uid": "f2e92baa-4afe-4ec0-8f49-9be26da8f661"
+      },
+      "reason": "Scheduled",
+      "reportingComponent": "default-scheduler",
+      "reportingInstance": "",
+      "source": {
+        "component": "default-scheduler"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 1,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:23:43Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "readiness-probe",
+        "namespace": "triage-lab",
+        "resourceVersion": "580",
+        "uid": "dee6e657-1cfb-4bcb-acdf-f8eddbcec485"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:23:43Z",
+      "message": "Pulling image \"nginx:1.27\"",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:23:43Z",
+        "name": "readiness-probe.18e1beb7d9d8c52a",
+        "namespace": "triage-lab",
+        "resourceVersion": "617",
+        "uid": "65d59bbd-dadd-4a1f-b752-4f971d7046e4"
+      },
+      "reason": "Pulling",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 1,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:32Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "readiness-probe",
+        "namespace": "triage-lab",
+        "resourceVersion": "580",
+        "uid": "dee6e657-1cfb-4bcb-acdf-f8eddbcec485"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:24:32Z",
+      "message": "Successfully pulled image \"nginx:1.27\" in 2.257s (48.943s including waiting). Image size: 72406859 bytes.",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:32Z",
+        "name": "readiness-probe.18e1bec33ec1a03d",
+        "namespace": "triage-lab",
+        "resourceVersion": "739",
+        "uid": "a50d4e54-fcb2-4357-a482-a2c7a2edafbe"
+      },
+      "reason": "Pulled",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 1,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:32Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "readiness-probe",
+        "namespace": "triage-lab",
+        "resourceVersion": "580",
+        "uid": "dee6e657-1cfb-4bcb-acdf-f8eddbcec485"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:24:32Z",
+      "message": "Container created",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:32Z",
+        "name": "readiness-probe.18e1bec343240862",
+        "namespace": "triage-lab",
+        "resourceVersion": "740",
+        "uid": "d4834268-a860-44ce-9367-6c0895274972"
+      },
+      "reason": "Created",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 1,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:32Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "readiness-probe",
+        "namespace": "triage-lab",
+        "resourceVersion": "580",
+        "uid": "dee6e657-1cfb-4bcb-acdf-f8eddbcec485"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:24:32Z",
+      "message": "Container started",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:32Z",
+        "name": "readiness-probe.18e1bec347d8410a",
+        "namespace": "triage-lab",
+        "resourceVersion": "741",
+        "uid": "6bd2d0c8-71e3-40e8-adb5-a3a3add5dee0"
+      },
+      "reason": "Started",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 1,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:32Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "readiness-probe",
+        "namespace": "triage-lab",
+        "resourceVersion": "580",
+        "uid": "dee6e657-1cfb-4bcb-acdf-f8eddbcec485"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:24:32Z",
+      "message": "Readiness probe failed: Get \"http://10.244.0.11:80/ready\": dial tcp 10.244.0.11:80: connect: connection refused",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:32Z",
+        "name": "readiness-probe.18e1bec348169576",
+        "namespace": "triage-lab",
+        "resourceVersion": "742",
+        "uid": "c18c1fac-32d4-429e-8e14-4ca7776b15be"
+      },
+      "reason": "Unhealthy",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Warning"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 24,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:33Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "readiness-probe",
+        "namespace": "triage-lab",
+        "resourceVersion": "580",
+        "uid": "dee6e657-1cfb-4bcb-acdf-f8eddbcec485"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:25:42Z",
+      "message": "Readiness probe failed: HTTP probe failed with statuscode: 404",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:33Z",
+        "name": "readiness-probe.18e1bec3770504aa",
+        "namespace": "triage-lab",
+        "resourceVersion": "1063",
+        "uid": "59eb2c57-2995-42af-a0a8-e5ceeb9840bc"
+      },
+      "reason": "Unhealthy",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Warning"
+    }
+  ],
+  "logs": {
+    "app": "/docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration\n/docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/\n/docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh\n10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf\n10-listen-on-ipv6-by-default.sh: info: Enabled listen on IPv6 in /etc/nginx/conf.d/default.conf\n/docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh\n/docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh\n/docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh\n/docker-entrypoint.sh: Configuration complete; ready for start up\n2026/10/25 10:24:32 [notice] 1#1: using the \"epoll\" event method\n2026/10/25 10:24:32 [notice] 1#1: nginx/1.27.5\n2026/10/25 10:24:32 [notice] 1#1: built by gcc 12.2.0 (Debian 12.2.0-14) \n2026/10/25 10:24:32 [notice] 1#1: OS: Linux 6.18.33.2-microsoft-standard-WSL2\n2026/10/25 10:24:32 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1073741816:1073741816\n2026/10/25 10:24:32 [notice] 1#1: start worker processes\n2026/10/25 10:24:32 [notice] 1#1: start worker process 33\n2026/10/25 10:24:32 [notice] 1#1: start worker process 34\n2026/10/25 10:24:32 [notice] 1#1: start worker process 35\n2026/10/25 10:24:32 [notice] 1#1: start worker process 36\n2026/10/25 10:24:32 [notice] 1#1: start worker process 37\n2026/10/25 10:24:32 [notice] 1#1: start worker process 38\n2026/10/25 10:24:32 [notice] 1#1: start worker process 39\n2026/10/25 10:24:32 [notice] 1#1: start worker process 40\n2026/10/25 10:24:32 [notice] 1#1: start worker process 41\n2026/10/25 10:24:32 [notice] 1#1: start worker process 42\n2026/10/25 10:24:32 [notice] 1#1: start worker process 43\n2026/10/25 10:24:32 [notice] 1#1: start worker process 44\n2026/10/25 10:24:33 [error] 34#34: *1 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:24:33 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n10.244.0.1 - - [25/Oct/2026:10:24:36 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:24:36 [error] 36#36: *2 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n2026/10/25 10:24:39 [error] 37#37: *3 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:24:39 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:24:42 [error] 38#38: *4 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:24:42 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:24:45 [error] 39#39: *5 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:24:45 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n10.244.0.1 - - [25/Oct/2026:10:24:48 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:24:48 [error] 33#33: *6 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n2026/10/25 10:24:51 [error] 40#40: *7 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:24:51 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:24:54 [error] 35#35: *8 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:24:54 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n10.244.0.1 - - [25/Oct/2026:10:24:57 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:24:57 [error] 41#41: *9 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:25:00 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:25:00 [error] 43#43: *10 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n2026/10/25 10:25:03 [error] 42#42: *11 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:25:03 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n10.244.0.1 - - [25/Oct/2026:10:25:06 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:25:06 [error] 44#44: *12 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:25:09 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:25:09 [error] 34#34: *13 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:25:12 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:25:12 [error] 34#34: *14 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n2026/10/25 10:25:15 [error] 34#34: *15 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:25:15 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:25:18 [error] 34#34: *16 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:25:18 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:25:21 [error] 34#34: *17 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:25:21 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n10.244.0.1 - - [25/Oct/2026:10:25:24 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:25:24 [error] 34#34: *18 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n2026/10/25 10:25:27 [error] 34#34: *19 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:25:27 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n10.244.0.1 - - [25/Oct/2026:10:25:30 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:25:30 [error] 34#34: *20 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:25:33 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:25:33 [error] 34#34: *21 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n2026/10/25 10:25:36 [error] 34#34: *22 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:25:36 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n10.244.0.1 - - [25/Oct/2026:10:25:39 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:25:39 [error] 34#34: *23 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n2026/10/25 10:25:42 [error] 34#34: *24 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:25:42 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:25:45 [error] 34#34: *25 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:25:45 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:25:48 [error] 34#34: *26 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:25:48 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n10.244.0.1 - - [25/Oct/2026:10:25:51 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:25:51 [error] 34#34: *27 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:25:54 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:25:54 [error] 34#34: *28 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n2026/10/25 10:25:57 [error] 36#36: *29 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:25:57 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n10.244.0.1 - - [25/Oct/2026:10:26:00 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:26:00 [error] 36#36: *30 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n2026/10/25 10:26:03 [error] 36#36: *31 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:26:03 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:26:06 [error] 36#36: *32 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:26:06 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n10.244.0.1 - - [25/Oct/2026:10:26:09 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:26:09 [error] 36#36: *33 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n2026/10/25 10:26:12 [error] 36#36: *34 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:26:12 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:26:15 [error] 36#36: *35 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:26:15 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:26:18 [error] 36#36: *36 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:26:18 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:26:21 [error] 36#36: *37 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:26:21 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n10.244.0.1 - - [25/Oct/2026:10:26:24 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:26:24 [error] 36#36: *38 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n2026/10/25 10:26:26 [error] 36#36: *39 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:26:26 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:26:29 [error] 36#36: *40 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:26:29 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:26:32 [error] 36#36: *41 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:26:32 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:26:35 [error] 36#36: *42 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:26:35 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:26:39 [error] 36#36: *43 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:26:39 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n10.244.0.1 - - [25/Oct/2026:10:26:41 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:26:41 [error] 36#36: *44 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:26:44 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:26:44 [error] 37#37: *45 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:26:47 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:26:47 [error] 37#37: *46 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:26:50 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:26:50 [error] 37#37: *47 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:26:53 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:26:53 [error] 37#37: *48 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:26:56 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:26:56 [error] 37#37: *49 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n2026/10/25 10:26:59 [error] 37#37: *50 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:26:59 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:27:02 [error] 37#37: *51 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:27:02 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:27:05 [error] 37#37: *52 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:27:05 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:27:08 [error] 37#37: *53 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:27:08 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:27:11 [error] 37#37: *54 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:27:11 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:27:14 [error] 37#37: *55 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:27:14 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n10.244.0.1 - - [25/Oct/2026:10:27:17 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:27:17 [error] 37#37: *56 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:27:20 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:27:20 [error] 37#37: *57 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:27:22 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:27:22 [error] 37#37: *58 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n2026/10/25 10:27:25 [error] 37#37: *59 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:27:25 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:27:28 [error] 37#37: *60 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:27:28 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n10.244.0.1 - - [25/Oct/2026:10:27:31 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:27:31 [error] 38#38: *61 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n2026/10/25 10:27:34 [error] 38#38: *62 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:27:34 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:27:37 [error] 38#38: *63 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:27:37 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:27:40 [error] 38#38: *64 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:27:40 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:27:43 [error] 38#38: *65 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:27:43 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:27:46 [error] 38#38: *66 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:27:46 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:27:49 [error] 38#38: *67 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:27:49 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:27:52 [error] 38#38: *68 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:27:52 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:27:55 [error] 38#38: *69 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:27:55 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n2026/10/25 10:27:58 [error] 38#38: *70 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\"\n10.244.0.1 - - [25/Oct/2026:10:27:58 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\"\n"
+  }
+}

@@ -24,10 +24,11 @@ kube-triage eval scenarios-real         # 実データで評価
 kind delete cluster --name triage-lab   # 後片付け
 ```
 
-## 合成データとの違いを確認するポイント
+## 実データで分かったこと
 
-- `12-crash-bad-command`: 存在しないコマンドはログが出ず、終了理由が `StartError`、メッセージが `lastState.terminated.message` に入る可能性がある
-- `08-liveness-probe`: 終了コードやイベントの文言が合成データと同じか
-- `14-init-failure`: `initContainerStatuses` に現れる (現行ルールは未対応)
+- `12-crash-bad-command`: ログは空で、終了理由は `StartError`（終了コード 128）。原因は `lastState.terminated.message` にだけ残る
+- `10`〜`13` の CrashLoop 系: 古いコンテナが削除済みだと `kubectl logs --previous` が取得に失敗するため、現在のコンテナのログも併せて取得する必要がある
+- `14-init-failure`: `initContainerStatuses` に現れ、メインコンテナは `PodInitializing` のまま
 
-合成データでは再現しにくい `registry_auth` (認証エラー) と `taint` はこのラボの対象外です。
+これらはルールと収集処理に反映済みです（[README の評価結果](../README.md#評価結果)）。
+合成データでは再現しにくい `registry_auth`（認証エラー）と `taint` はこのラボの対象外です。

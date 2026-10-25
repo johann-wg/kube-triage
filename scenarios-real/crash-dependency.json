@@ -1,0 +1,466 @@
+{
+  "description": "kind で再現 (crash-dependency)",
+  "expected": {
+    "category": "CRASH_LOOP",
+    "subcause": "dependency_unreachable"
+  },
+  "pod": {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "annotations": {
+        "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"kind\":\"Pod\",\"metadata\":{\"annotations\":{\"triage-lab/expected\":\"CRASH_LOOP/dependency_unreachable\"},\"labels\":{\"app.kubernetes.io/part-of\":\"triage-lab\"},\"name\":\"crash-dependency\",\"namespace\":\"triage-lab\"},\"spec\":{\"containers\":[{\"command\":[\"python\",\"-c\",\"import socket; socket.create_connection(('127.0.0.1', 6379), timeout=3)\"],\"image\":\"python:3.12-alpine\",\"name\":\"app\"}],\"restartPolicy\":\"Always\"}}\n",
+        "triage-lab/expected": "CRASH_LOOP/dependency_unreachable"
+      },
+      "creationTimestamp": "2026-10-25T10:23:41Z",
+      "generation": 1,
+      "labels": {
+        "app.kubernetes.io/part-of": "triage-lab"
+      },
+      "name": "crash-dependency",
+      "namespace": "triage-lab",
+      "resourceVersion": "1332",
+      "uid": "96940fca-9639-4218-a4f9-91f2f2a556bb"
+    },
+    "spec": {
+      "containers": [
+        {
+          "command": [
+            "python",
+            "-c",
+            "import socket; socket.create_connection(('127.0.0.1', 6379), timeout=3)"
+          ],
+          "image": "python:3.12-alpine",
+          "imagePullPolicy": "IfNotPresent",
+          "name": "app",
+          "resources": {},
+          "terminationMessagePath": "/dev/termination-log",
+          "terminationMessagePolicy": "File",
+          "volumeMounts": [
+            {
+              "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+              "name": "kube-api-access-f8jrq",
+              "readOnly": true
+            }
+          ]
+        }
+      ],
+      "dnsPolicy": "ClusterFirst",
+      "enableServiceLinks": true,
+      "nodeName": "triage-lab-control-plane",
+      "preemptionPolicy": "PreemptLowerPriority",
+      "priority": 0,
+      "restartPolicy": "Always",
+      "schedulerName": "default-scheduler",
+      "securityContext": {},
+      "serviceAccount": "default",
+      "serviceAccountName": "default",
+      "terminationGracePeriodSeconds": 30,
+      "tolerations": [
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/not-ready",
+          "operator": "Exists",
+          "tolerationSeconds": 300
+        },
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/unreachable",
+          "operator": "Exists",
+          "tolerationSeconds": 300
+        }
+      ],
+      "volumes": [
+        {
+          "name": "kube-api-access-f8jrq",
+          "projected": {
+            "defaultMode": 420,
+            "sources": [
+              {
+                "serviceAccountToken": {
+                  "expirationSeconds": 3607,
+                  "path": "token"
+                }
+              },
+              {
+                "configMap": {
+                  "items": [
+                    {
+                      "key": "ca.crt",
+                      "path": "ca.crt"
+                    }
+                  ],
+                  "name": "kube-root-ca.crt"
+                }
+              },
+              {
+                "downwardAPI": {
+                  "items": [
+                    {
+                      "fieldRef": {
+                        "apiVersion": "v1",
+                        "fieldPath": "metadata.namespace"
+                      },
+                      "path": "namespace"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "status": {
+      "conditions": [
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:43Z",
+          "observedGeneration": 1,
+          "status": "True",
+          "type": "PodReadyToStartContainers"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:41Z",
+          "observedGeneration": 1,
+          "status": "True",
+          "type": "Initialized"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:27:24Z",
+          "message": "containers with unready status: [app]",
+          "observedGeneration": 1,
+          "reason": "ContainersNotReady",
+          "status": "False",
+          "type": "Ready"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:27:24Z",
+          "message": "containers with unready status: [app]",
+          "observedGeneration": 1,
+          "reason": "ContainersNotReady",
+          "status": "False",
+          "type": "ContainersReady"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-10-25T10:23:41Z",
+          "observedGeneration": 1,
+          "status": "True",
+          "type": "PodScheduled"
+        }
+      ],
+      "containerStatuses": [
+        {
+          "containerID": "containerd://50b13c95013288f7a8062a72ca544c0111ba0b7456419809abcd52cb6e7b23e7",
+          "image": "docker.io/library/python:3.12-alpine",
+          "imageID": "docker.io/library/python@sha256:b658b05ce9c4eb97ec6fc19424818a1f31993659c2b505a532f470e83807815d",
+          "lastState": {
+            "terminated": {
+              "containerID": "containerd://366b00e3df497f26dc08fc5ccb77cc492c0cce85e4e09a3edbef2aea9b9ffdc4",
+              "exitCode": 1,
+              "finishedAt": "2026-10-25T10:26:01Z",
+              "reason": "Error",
+              "startedAt": "2026-10-25T10:26:01Z"
+            }
+          },
+          "name": "app",
+          "ready": false,
+          "resources": {},
+          "restartCount": 5,
+          "started": false,
+          "state": {
+            "terminated": {
+              "containerID": "containerd://50b13c95013288f7a8062a72ca544c0111ba0b7456419809abcd52cb6e7b23e7",
+              "exitCode": 1,
+              "finishedAt": "2026-10-25T10:27:23Z",
+              "reason": "Error",
+              "startedAt": "2026-10-25T10:27:23Z"
+            }
+          },
+          "user": {
+            "linux": {
+              "gid": 0,
+              "supplementalGroups": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                6,
+                10,
+                11,
+                20,
+                26,
+                27
+              ],
+              "uid": 0
+            }
+          },
+          "volumeMounts": [
+            {
+              "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+              "name": "kube-api-access-f8jrq",
+              "readOnly": true,
+              "recursiveReadOnly": "Disabled"
+            }
+          ]
+        }
+      ],
+      "hostIP": "172.18.0.2",
+      "hostIPs": [
+        {
+          "ip": "172.18.0.2"
+        }
+      ],
+      "observedGeneration": 1,
+      "phase": "Running",
+      "podIP": "10.244.0.12",
+      "podIPs": [
+        {
+          "ip": "10.244.0.12"
+        }
+      ],
+      "qosClass": "BestEffort",
+      "resources": {},
+      "startTime": "2026-10-25T10:23:41Z"
+    }
+  },
+  "events": [
+    {
+      "apiVersion": "v1",
+      "count": 1,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:23:41Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "kind": "Pod",
+        "name": "crash-dependency",
+        "namespace": "triage-lab",
+        "resourceVersion": "586",
+        "uid": "96940fca-9639-4218-a4f9-91f2f2a556bb"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:23:41Z",
+      "message": "Successfully assigned triage-lab/crash-dependency to triage-lab-control-plane",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:23:41Z",
+        "name": "crash-dependency.18e1beb770eafe8c",
+        "namespace": "triage-lab",
+        "resourceVersion": "588",
+        "uid": "b78466c2-940d-4661-96ed-0d293283c245"
+      },
+      "reason": "Scheduled",
+      "reportingComponent": "default-scheduler",
+      "reportingInstance": "",
+      "source": {
+        "component": "default-scheduler"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 1,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:23:43Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "crash-dependency",
+        "namespace": "triage-lab",
+        "resourceVersion": "587",
+        "uid": "96940fca-9639-4218-a4f9-91f2f2a556bb"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:23:43Z",
+      "message": "Pulling image \"python:3.12-alpine\"",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:23:43Z",
+        "name": "crash-dependency.18e1beb7e245dc82",
+        "namespace": "triage-lab",
+        "resourceVersion": "619",
+        "uid": "aba10fad-a55f-4e1b-9e83-04a1b9353219"
+      },
+      "reason": "Pulling",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 1,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:35Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "crash-dependency",
+        "namespace": "triage-lab",
+        "resourceVersion": "587",
+        "uid": "96940fca-9639-4218-a4f9-91f2f2a556bb"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:24:35Z",
+      "message": "Successfully pulled image \"python:3.12-alpine\" in 2.616s (51.418s including waiting). Image size: 18059920 bytes.",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:35Z",
+        "name": "crash-dependency.18e1bec3dab5e9c4",
+        "namespace": "triage-lab",
+        "resourceVersion": "748",
+        "uid": "fa287756-7e65-47e0-8f58-76a221cba261"
+      },
+      "reason": "Pulled",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 6,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:35Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "crash-dependency",
+        "namespace": "triage-lab",
+        "resourceVersion": "587",
+        "uid": "96940fca-9639-4218-a4f9-91f2f2a556bb"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:27:23Z",
+      "message": "Container created",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:35Z",
+        "name": "crash-dependency.18e1bec3df698b48",
+        "namespace": "triage-lab",
+        "resourceVersion": "1323",
+        "uid": "3a3cad59-1e63-4e6f-b7ba-8ea583f9d0a4"
+      },
+      "reason": "Created",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 6,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:35Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "crash-dependency",
+        "namespace": "triage-lab",
+        "resourceVersion": "587",
+        "uid": "96940fca-9639-4218-a4f9-91f2f2a556bb"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:27:23Z",
+      "message": "Container started",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:35Z",
+        "name": "crash-dependency.18e1bec3e42cf3da",
+        "namespace": "triage-lab",
+        "resourceVersion": "1324",
+        "uid": "d591e9f2-ee7f-495a-bcfb-6ed12b0fb56c"
+      },
+      "reason": "Started",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 5,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:36Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "crash-dependency",
+        "namespace": "triage-lab",
+        "resourceVersion": "587",
+        "uid": "96940fca-9639-4218-a4f9-91f2f2a556bb"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:27:22Z",
+      "message": "Container image \"python:3.12-alpine\" already present on machine and can be accessed by the pod",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:36Z",
+        "name": "crash-dependency.18e1bec42ab71631",
+        "namespace": "triage-lab",
+        "resourceVersion": "1321",
+        "uid": "a68d581e-3070-4cf1-9f8a-1f03b6834f52"
+      },
+      "reason": "Pulled",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Normal"
+    },
+    {
+      "apiVersion": "v1",
+      "count": 5,
+      "eventTime": null,
+      "firstTimestamp": "2026-10-25T10:24:37Z",
+      "involvedObject": {
+        "apiVersion": "v1",
+        "fieldPath": "spec.containers{app}",
+        "kind": "Pod",
+        "name": "crash-dependency",
+        "namespace": "triage-lab",
+        "resourceVersion": "587",
+        "uid": "96940fca-9639-4218-a4f9-91f2f2a556bb"
+      },
+      "kind": "Event",
+      "lastTimestamp": "2026-10-25T10:27:24Z",
+      "message": "Back-off restarting failed container app in pod crash-dependency_triage-lab(96940fca-9639-4218-a4f9-91f2f2a556bb)",
+      "metadata": {
+        "creationTimestamp": "2026-10-25T10:24:37Z",
+        "name": "crash-dependency.18e1bec466efd34d",
+        "namespace": "triage-lab",
+        "resourceVersion": "1331",
+        "uid": "6f0f514a-911b-4a1a-bc71-b632b47683d5"
+      },
+      "reason": "BackOff",
+      "reportingComponent": "kubelet",
+      "reportingInstance": "triage-lab-control-plane",
+      "source": {
+        "component": "kubelet",
+        "host": "triage-lab-control-plane"
+      },
+      "type": "Warning"
+    }
+  ],
+  "logs": {
+    "app": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/usr/local/lib/python3.12/socket.py\", line 865, in create_connection\n    raise exceptions[0]\n  File \"/usr/local/lib/python3.12/socket.py\", line 850, in create_connection\n    sock.connect(sa)\nConnectionRefusedError: [Errno 111] Connection refused\n"
+  }
+}

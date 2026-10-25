@@ -310,40 +310,53 @@ _CRASH_ACTIONS = {
 }
 
 
+# 再起動を繰り返している / 起動できずに止まっていると判断する待機理由
+_CRASH_WAITING_REASONS = {"CrashLoopBackOff", "RunContainerError"}
+
+
 def rule_crash_loop(bundle: Bundle) -> Finding | None:
-    for cs in bundle.container_statuses():
-        waiting = cs.get("state", {}).get("waiting", {})
+    # initContainer が失敗するとメインコンテナは起動しないため、先に確認する
+    statuses = [("initContainerStatuses", cs) for cs in bundle.init_container_statuses()]
+    statuses += [("containerStatuses", cs) for cs in bundle.container_statuses()]
+    for key, cs in statuses:
+        state = cs.get("state", {})
+        waiting = state.get("waiting", {})
         last = cs.get("lastState", {}).get("terminated")
-        if waiting.get("reason") != "CrashLoopBackOff" and not (
-            last and cs.get("restartCount", 0) > 0
-        ):
+        restarts = cs.get("restartCount", 0)
+        if waiting.get("reason") not in _CRASH_WAITING_REASONS and not (last and restarts > 0):
             continue
         name = cs["name"]
-        evidence = [
-            Evidence(
-                f"status.containerStatuses[{name}]",
-                f"state={waiting.get('reason', 'Running')}, restartCount={cs.get('restartCount', 0)}",
-            )
-        ]
+        current = waiting.get("reason") or next(iter(state), "unknown")
+        evidence = [Evidence(f"status.{key}[{name}]", f"state={current}, restartCount={restarts}")]
         exit_code = None
         if last:
             exit_code = last.get("exitCode")
             evidence.append(
                 Evidence(
-                    f"status.containerStatuses[{name}].lastState",
+                    f"status.{key}[{name}].lastState",
                     f"terminated.reason={last.get('reason')}, exitCode={exit_code}",
                 )
             )
 
-        subcause, log_line = _match_log(bundle.logs.get(name, ""))
-        if log_line:
-            evidence.append(Evidence(f"logs/{name} (previous)", log_line))
+        # ログが取れない場合もあるため、終了メッセージも原因の手がかりとして使う
+        texts = [
+            (f"logs/{name}", bundle.logs.get(name, "")),
+            (f"status.{key}[{name}].lastState.terminated.message", (last or {}).get("message", "")),
+            (f"status.{key}[{name}].state.waiting.message", waiting.get("message", "")),
+        ]
+        subcause, source, line = _match_texts(texts)
+        if line:
+            evidence.append(Evidence(source, line))
         elif exit_code in _EXIT_CODE_SUBCAUSES:
             subcause = _EXIT_CODE_SUBCAUSES[exit_code]
 
+        if key == "initContainerStatuses":
+            title = f"initContainer「{name}」が失敗し、Pod の起動が止まっています"
+        else:
+            title = "コンテナが起動直後に異常終了し、再起動を繰り返しています"
         return Finding(
             category=Category.CRASH_LOOP,
-            title="コンテナが起動直後に異常終了し、再起動を繰り返しています",
+            title=title,
             confidence=0.8 if subcause else 0.6,
             subcause=subcause,
             evidence=evidence,
@@ -366,14 +379,17 @@ def _match_first(patterns: list[tuple[str, re.Pattern]], text: str) -> str | Non
     return None
 
 
-def _match_log(log: str) -> tuple[str | None, str | None]:
-    """ログを行単位で見て、最初にマッチしたサブ原因とその行を返す."""
-    lines = log.splitlines()
+def _match_texts(texts: list[tuple[str, str]]) -> tuple[str | None, str | None, str | None]:
+    """(出典, 本文) の組を行単位で見て、最初にマッチした (サブ原因, 出典, 行) を返す.
+
+    パターンの優先順位を出典の順序より優先する.
+    """
     for label, pattern in _CRASH_LOG_PATTERNS:
-        for line in lines:
-            if pattern.search(line):
-                return label, line.strip()
-    return None, None
+        for source, text in texts:
+            for line in text.splitlines():
+                if pattern.search(line):
+                    return label, source, line.strip()
+    return None, None, None
 
 
 RULES: list[Rule] = [
