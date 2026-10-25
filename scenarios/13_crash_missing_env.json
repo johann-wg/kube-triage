@@ -1,0 +1,67 @@
+{
+  "description": "必須環境変数が未定義",
+  "expected": {
+    "category": "CRASH_LOOP",
+    "subcause": "missing_env"
+  },
+  "pod": {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "api-noenv",
+      "namespace": "shop"
+    },
+    "spec": {
+      "containers": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2",
+          "resources": {
+            "limits": {
+              "memory": "256Mi",
+              "cpu": "500m"
+            }
+          }
+        }
+      ]
+    },
+    "status": {
+      "phase": "Running",
+      "conditions": [
+        {
+          "type": "PodScheduled",
+          "status": "True"
+        },
+        {
+          "type": "Ready",
+          "status": "False"
+        }
+      ],
+      "containerStatuses": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2",
+          "ready": false,
+          "restartCount": 6,
+          "state": {
+            "waiting": {
+              "reason": "CrashLoopBackOff",
+              "message": ""
+            }
+          },
+          "lastState": {
+            "terminated": {
+              "reason": "Error",
+              "exitCode": 1,
+              "finishedAt": "2026-10-25T09:00:00Z"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "events": [],
+  "logs": {
+    "app": "Traceback (most recent call last):\n  File \"/app/main.py\", line 8, in <module>\n    DB_URL = os.environ[\"DATABASE_URL\"]\nKeyError: 'DATABASE_URL'\n"
+  }
+}

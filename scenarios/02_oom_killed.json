@@ -1,0 +1,77 @@
+{
+  "description": "CrashLoopBackOff だが直前の終了理由は OOMKilled (OOM を優先すべき)",
+  "expected": {
+    "category": "OOM_KILLED",
+    "subcause": null
+  },
+  "pod": {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "api-oom",
+      "namespace": "shop"
+    },
+    "spec": {
+      "containers": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2",
+          "resources": {
+            "limits": {
+              "memory": "128Mi",
+              "cpu": "500m"
+            }
+          }
+        }
+      ]
+    },
+    "status": {
+      "phase": "Running",
+      "conditions": [
+        {
+          "type": "PodScheduled",
+          "status": "True"
+        },
+        {
+          "type": "Ready",
+          "status": "False"
+        }
+      ],
+      "containerStatuses": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2",
+          "ready": false,
+          "restartCount": 5,
+          "state": {
+            "waiting": {
+              "reason": "CrashLoopBackOff",
+              "message": "back-off 2m40s restarting failed container"
+            }
+          },
+          "lastState": {
+            "terminated": {
+              "reason": "OOMKilled",
+              "exitCode": 137,
+              "finishedAt": "2026-10-25T09:00:00Z"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "events": [
+    {
+      "type": "Warning",
+      "reason": "BackOff",
+      "message": "Back-off restarting failed container app",
+      "count": 12,
+      "involvedObject": {
+        "kind": "Pod",
+        "name": "api-oom",
+        "namespace": "shop"
+      }
+    }
+  ],
+  "logs": {}
+}

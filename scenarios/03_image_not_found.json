@@ -1,0 +1,71 @@
+{
+  "description": "存在しないタグを指定",
+  "expected": {
+    "category": "IMAGE_PULL",
+    "subcause": "image_not_found"
+  },
+  "pod": {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "api-badtag",
+      "namespace": "shop"
+    },
+    "spec": {
+      "containers": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2x",
+          "resources": {
+            "limits": {
+              "memory": "256Mi",
+              "cpu": "500m"
+            }
+          }
+        }
+      ]
+    },
+    "status": {
+      "phase": "Pending",
+      "conditions": [
+        {
+          "type": "PodScheduled",
+          "status": "True"
+        },
+        {
+          "type": "Ready",
+          "status": "False"
+        }
+      ],
+      "containerStatuses": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2x",
+          "ready": false,
+          "restartCount": 0,
+          "state": {
+            "waiting": {
+              "reason": "ImagePullBackOff",
+              "message": "Back-off pulling image"
+            }
+          },
+          "lastState": {}
+        }
+      ]
+    }
+  },
+  "events": [
+    {
+      "type": "Warning",
+      "reason": "Failed",
+      "message": "Failed to pull image \"registry.example.com/shop/api:1.4.2x\": rpc error: code = NotFound desc = failed to pull and unpack image: registry.example.com/shop/api:1.4.2x: not found",
+      "count": 4,
+      "involvedObject": {
+        "kind": "Pod",
+        "name": "api-badtag",
+        "namespace": "shop"
+      }
+    }
+  ],
+  "logs": {}
+}

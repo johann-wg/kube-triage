@@ -1,0 +1,43 @@
+{
+  "description": "nodeSelector のラベルを持つノードがない",
+  "expected": {
+    "category": "UNSCHEDULABLE",
+    "subcause": "node_selector"
+  },
+  "pod": {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "api-gpu-node",
+      "namespace": "shop"
+    },
+    "spec": {
+      "containers": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2",
+          "resources": {
+            "limits": {
+              "memory": "256Mi",
+              "cpu": "500m"
+            }
+          }
+        }
+      ]
+    },
+    "status": {
+      "phase": "Pending",
+      "conditions": [
+        {
+          "type": "PodScheduled",
+          "status": "False",
+          "reason": "Unschedulable",
+          "message": "0/3 nodes are available: 3 node(s) didn't match Pod's node affinity/selector."
+        }
+      ],
+      "containerStatuses": []
+    }
+  },
+  "events": [],
+  "logs": {}
+}

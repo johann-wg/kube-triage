@@ -1,0 +1,71 @@
+{
+  "description": "プライベートレジストリで imagePullSecrets 未設定",
+  "expected": {
+    "category": "IMAGE_PULL",
+    "subcause": "registry_auth"
+  },
+  "pod": {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "api-private",
+      "namespace": "shop"
+    },
+    "spec": {
+      "containers": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2",
+          "resources": {
+            "limits": {
+              "memory": "256Mi",
+              "cpu": "500m"
+            }
+          }
+        }
+      ]
+    },
+    "status": {
+      "phase": "Pending",
+      "conditions": [
+        {
+          "type": "PodScheduled",
+          "status": "True"
+        },
+        {
+          "type": "Ready",
+          "status": "False"
+        }
+      ],
+      "containerStatuses": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2",
+          "ready": false,
+          "restartCount": 0,
+          "state": {
+            "waiting": {
+              "reason": "ErrImagePull",
+              "message": ""
+            }
+          },
+          "lastState": {}
+        }
+      ]
+    }
+  },
+  "events": [
+    {
+      "type": "Warning",
+      "reason": "Failed",
+      "message": "Failed to pull image \"registry.example.com/shop/api:1.4.2\": failed to authorize: failed to fetch oauth token: unexpected status: 401 Unauthorized",
+      "count": 3,
+      "involvedObject": {
+        "kind": "Pod",
+        "name": "api-private",
+        "namespace": "shop"
+      }
+    }
+  ],
+  "logs": {}
+}

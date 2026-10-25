@@ -1,0 +1,58 @@
+{
+  "description": "正常稼働",
+  "expected": {
+    "category": "HEALTHY",
+    "subcause": null
+  },
+  "pod": {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "api-healthy",
+      "namespace": "shop"
+    },
+    "spec": {
+      "containers": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2",
+          "resources": {
+            "limits": {
+              "memory": "256Mi",
+              "cpu": "500m"
+            }
+          }
+        }
+      ]
+    },
+    "status": {
+      "phase": "Running",
+      "conditions": [
+        {
+          "type": "PodScheduled",
+          "status": "True"
+        },
+        {
+          "type": "Ready",
+          "status": "True"
+        }
+      ],
+      "containerStatuses": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2",
+          "ready": true,
+          "restartCount": 0,
+          "state": {
+            "running": {
+              "startedAt": "2026-10-25T09:00:00Z"
+            }
+          },
+          "lastState": {}
+        }
+      ]
+    }
+  },
+  "events": [],
+  "logs": {}
+}

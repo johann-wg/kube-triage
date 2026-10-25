@@ -1,0 +1,59 @@
+{
+  "description": "参照先 ConfigMap が未作成",
+  "expected": {
+    "category": "CONFIG_ERROR",
+    "subcause": "missing_configmap"
+  },
+  "pod": {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "api-nocm",
+      "namespace": "shop"
+    },
+    "spec": {
+      "containers": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2",
+          "resources": {
+            "limits": {
+              "memory": "256Mi",
+              "cpu": "500m"
+            }
+          }
+        }
+      ]
+    },
+    "status": {
+      "phase": "Pending",
+      "conditions": [
+        {
+          "type": "PodScheduled",
+          "status": "True"
+        },
+        {
+          "type": "Ready",
+          "status": "False"
+        }
+      ],
+      "containerStatuses": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2",
+          "ready": false,
+          "restartCount": 0,
+          "state": {
+            "waiting": {
+              "reason": "CreateContainerConfigError",
+              "message": "configmap \"api-config\" not found"
+            }
+          },
+          "lastState": {}
+        }
+      ]
+    }
+  },
+  "events": [],
+  "logs": {}
+}

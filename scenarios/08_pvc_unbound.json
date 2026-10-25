@@ -1,0 +1,43 @@
+{
+  "description": "StorageClass が存在せず PVC が Pending",
+  "expected": {
+    "category": "UNSCHEDULABLE",
+    "subcause": "pvc_unbound"
+  },
+  "pod": {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "db-0",
+      "namespace": "shop"
+    },
+    "spec": {
+      "containers": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2",
+          "resources": {
+            "limits": {
+              "memory": "256Mi",
+              "cpu": "500m"
+            }
+          }
+        }
+      ]
+    },
+    "status": {
+      "phase": "Pending",
+      "conditions": [
+        {
+          "type": "PodScheduled",
+          "status": "False",
+          "reason": "Unschedulable",
+          "message": "0/3 nodes are available: pod has unbound immediate PersistentVolumeClaims."
+        }
+      ],
+      "containerStatuses": []
+    }
+  },
+  "events": [],
+  "logs": {}
+}

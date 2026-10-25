@@ -1,0 +1,43 @@
+{
+  "description": "全ノードに taint があり toleration 不足",
+  "expected": {
+    "category": "UNSCHEDULABLE",
+    "subcause": "taint"
+  },
+  "pod": {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "api-taint",
+      "namespace": "shop"
+    },
+    "spec": {
+      "containers": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2",
+          "resources": {
+            "limits": {
+              "memory": "256Mi",
+              "cpu": "500m"
+            }
+          }
+        }
+      ]
+    },
+    "status": {
+      "phase": "Pending",
+      "conditions": [
+        {
+          "type": "PodScheduled",
+          "status": "False",
+          "reason": "Unschedulable",
+          "message": "0/3 nodes are available: 3 node(s) had untolerated taint {dedicated: infra}."
+        }
+      ],
+      "containerStatuses": []
+    }
+  },
+  "events": [],
+  "logs": {}
+}

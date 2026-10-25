@@ -1,0 +1,55 @@
+{
+  "description": "requests がノードの空き容量を超過",
+  "expected": {
+    "category": "UNSCHEDULABLE",
+    "subcause": "insufficient_resources"
+  },
+  "pod": {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "batch-bigmem",
+      "namespace": "shop"
+    },
+    "spec": {
+      "containers": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2",
+          "resources": {
+            "limits": {
+              "memory": "256Mi",
+              "cpu": "500m"
+            }
+          }
+        }
+      ]
+    },
+    "status": {
+      "phase": "Pending",
+      "conditions": [
+        {
+          "type": "PodScheduled",
+          "status": "False",
+          "reason": "Unschedulable",
+          "message": "0/3 nodes are available: 3 Insufficient memory. preemption: 0/3 nodes are available: 3 No preemption victims found for incoming pod."
+        }
+      ],
+      "containerStatuses": []
+    }
+  },
+  "events": [
+    {
+      "type": "Warning",
+      "reason": "FailedScheduling",
+      "message": "0/3 nodes are available: 3 Insufficient memory.",
+      "count": 1,
+      "involvedObject": {
+        "kind": "Pod",
+        "name": "batch-bigmem",
+        "namespace": "shop"
+      }
+    }
+  ],
+  "logs": {}
+}

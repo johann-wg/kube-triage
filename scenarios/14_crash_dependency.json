@@ -1,0 +1,67 @@
+{
+  "description": "接続先 Redis の Service 名誤り",
+  "expected": {
+    "category": "CRASH_LOOP",
+    "subcause": "dependency_unreachable"
+  },
+  "pod": {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "worker-redis",
+      "namespace": "shop"
+    },
+    "spec": {
+      "containers": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2",
+          "resources": {
+            "limits": {
+              "memory": "256Mi",
+              "cpu": "500m"
+            }
+          }
+        }
+      ]
+    },
+    "status": {
+      "phase": "Running",
+      "conditions": [
+        {
+          "type": "PodScheduled",
+          "status": "True"
+        },
+        {
+          "type": "Ready",
+          "status": "False"
+        }
+      ],
+      "containerStatuses": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2",
+          "ready": false,
+          "restartCount": 3,
+          "state": {
+            "waiting": {
+              "reason": "CrashLoopBackOff",
+              "message": ""
+            }
+          },
+          "lastState": {
+            "terminated": {
+              "reason": "Error",
+              "exitCode": 1,
+              "finishedAt": "2026-10-25T09:00:00Z"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "events": [],
+  "logs": {
+    "app": "INFO worker starting\nERROR Error 111 connecting to redis-master:6379. Connection refused.\n"
+  }
+}

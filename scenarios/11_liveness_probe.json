@@ -1,0 +1,90 @@
+{
+  "description": "起動が遅く Liveness Probe で kill される (exitCode 137 でも OOM ではない)",
+  "expected": {
+    "category": "PROBE_FAILURE",
+    "subcause": "liveness"
+  },
+  "pod": {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "api-slowstart",
+      "namespace": "shop"
+    },
+    "spec": {
+      "containers": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2",
+          "resources": {
+            "limits": {
+              "memory": "256Mi",
+              "cpu": "500m"
+            }
+          }
+        }
+      ]
+    },
+    "status": {
+      "phase": "Running",
+      "conditions": [
+        {
+          "type": "PodScheduled",
+          "status": "True"
+        },
+        {
+          "type": "Ready",
+          "status": "False"
+        }
+      ],
+      "containerStatuses": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2",
+          "ready": false,
+          "restartCount": 4,
+          "state": {
+            "waiting": {
+              "reason": "CrashLoopBackOff",
+              "message": ""
+            }
+          },
+          "lastState": {
+            "terminated": {
+              "reason": "Error",
+              "exitCode": 137,
+              "finishedAt": "2026-10-25T09:00:00Z"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "events": [
+    {
+      "type": "Warning",
+      "reason": "Unhealthy",
+      "message": "Liveness probe failed: Get \"http://10.128.2.15:8080/healthz\": dial tcp 10.128.2.15:8080: connect: connection refused",
+      "count": 12,
+      "involvedObject": {
+        "kind": "Pod",
+        "name": "api-slowstart",
+        "namespace": "shop"
+      }
+    },
+    {
+      "type": "Normal",
+      "reason": "Killing",
+      "message": "Container app failed liveness probe, will be restarted",
+      "count": 4,
+      "involvedObject": {
+        "kind": "Pod",
+        "name": "api-slowstart",
+        "namespace": "shop"
+      }
+    }
+  ],
+  "logs": {
+    "app": "Starting application...\nLoading model weights (this may take a while)\n"
+  }
+}

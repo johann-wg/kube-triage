@@ -1,0 +1,67 @@
+{
+  "description": "設定値の誤り. ログの文言が汎用パターンに当たらない",
+  "expected": {
+    "category": "CRASH_LOOP",
+    "subcause": "invalid_config"
+  },
+  "pod": {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "api-badflag",
+      "namespace": "shop"
+    },
+    "spec": {
+      "containers": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2",
+          "resources": {
+            "limits": {
+              "memory": "256Mi",
+              "cpu": "500m"
+            }
+          }
+        }
+      ]
+    },
+    "status": {
+      "phase": "Running",
+      "conditions": [
+        {
+          "type": "PodScheduled",
+          "status": "True"
+        },
+        {
+          "type": "Ready",
+          "status": "False"
+        }
+      ],
+      "containerStatuses": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2",
+          "ready": false,
+          "restartCount": 4,
+          "state": {
+            "waiting": {
+              "reason": "CrashLoopBackOff",
+              "message": ""
+            }
+          },
+          "lastState": {
+            "terminated": {
+              "reason": "Error",
+              "exitCode": 2,
+              "finishedAt": "2026-10-25T09:00:00Z"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "events": [],
+  "logs": {
+    "app": "level=info msg=\"loading config\" path=/etc/api/config.yaml\nlevel=fatal msg=\"invalid value for log_level: 'verbose' (expected one of debug, info, warn, error)\"\n"
+  }
+}

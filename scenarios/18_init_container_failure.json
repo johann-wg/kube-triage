@@ -1,0 +1,81 @@
+{
+  "description": "initContainer (DB マイグレーション) の失敗. containerStatuses ではなく initContainerStatuses に現れる",
+  "expected": {
+    "category": "CRASH_LOOP",
+    "subcause": "dependency_unreachable"
+  },
+  "pod": {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "api-migrate",
+      "namespace": "shop"
+    },
+    "spec": {
+      "containers": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2",
+          "resources": {
+            "limits": {
+              "memory": "256Mi",
+              "cpu": "500m"
+            }
+          }
+        }
+      ]
+    },
+    "status": {
+      "phase": "Pending",
+      "conditions": [
+        {
+          "type": "PodScheduled",
+          "status": "True"
+        },
+        {
+          "type": "Initialized",
+          "status": "False",
+          "reason": "ContainersNotInitialized"
+        }
+      ],
+      "initContainerStatuses": [
+        {
+          "name": "migrate",
+          "ready": false,
+          "restartCount": 3,
+          "state": {
+            "waiting": {
+              "reason": "CrashLoopBackOff"
+            }
+          },
+          "lastState": {
+            "terminated": {
+              "reason": "Error",
+              "exitCode": 1,
+              "finishedAt": "2026-10-25T09:00:00Z"
+            }
+          }
+        }
+      ],
+      "containerStatuses": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2",
+          "ready": false,
+          "restartCount": 0,
+          "state": {
+            "waiting": {
+              "reason": "PodInitializing",
+              "message": ""
+            }
+          },
+          "lastState": {}
+        }
+      ]
+    }
+  },
+  "events": [],
+  "logs": {
+    "migrate": "psycopg2.OperationalError: could not connect to server: Connection refused\n"
+  }
+}

@@ -1,0 +1,82 @@
+"""コマンドラインインターフェース."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from pathlib import Path
+
+from kube_triage import report
+from kube_triage.bundle import Bundle
+from kube_triage.rules import diagnose
+
+
+def _cmd_analyze(args: argparse.Namespace) -> int:
+    bundle = Bundle.load(args.bundle)
+    findings = diagnose(bundle)
+    print(report.to_json(bundle, findings) if args.json else report.to_text(bundle, findings))
+    return 0
+
+
+def _cmd_collect(args: argparse.Namespace) -> int:
+    from kube_triage.collect import collect
+
+    data = collect(args.pod, args.namespace)
+    out = Path(args.output or f"{args.pod}.json")
+    out.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"saved: {out}")
+    return 0
+
+
+def _cmd_eval(args: argparse.Namespace) -> int:
+    from kube_triage.evaluate import evaluate, summarize
+
+    results = evaluate(args.scenarios)
+    table = summarize(results)
+    print(table)
+    if args.report:
+        Path(args.report).write_text(table + "\n", encoding="utf-8")
+    if args.min_accuracy is not None:
+        accuracy = sum(r.category_ok for r in results) / len(results)
+        if accuracy < args.min_accuracy:
+            print(f"category accuracy {accuracy:.1%} < {args.min_accuracy:.1%}", file=sys.stderr)
+            return 1
+    return 0
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        prog="kube-triage", description="Kubernetes Pod 障害の一次切り分け"
+    )
+    sub = parser.add_subparsers(dest="command", required=True)
+
+    p = sub.add_parser("analyze", help="Bundle(JSON) を診断する")
+    p.add_argument("bundle")
+    p.add_argument("--json", action="store_true", help="JSON で出力")
+    p.set_defaults(func=_cmd_analyze)
+
+    p = sub.add_parser("collect", help="kubectl で実クラスタから Bundle を収集する")
+    p.add_argument("pod")
+    p.add_argument("-n", "--namespace", default="default")
+    p.add_argument("-o", "--output")
+    p.set_defaults(func=_cmd_collect)
+
+    p = sub.add_parser("eval", help="シナリオ集で判定精度を評価する")
+    p.add_argument("scenarios", nargs="?", default="scenarios")
+    p.add_argument("--report", help="結果を Markdown で保存するパス")
+    p.add_argument("--min-accuracy", type=float, help="カテゴリ正解率がこれ未満なら終了コード 1")
+    p.set_defaults(func=_cmd_eval)
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8")
+    args = build_parser().parse_args(argv)
+    return args.func(args)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

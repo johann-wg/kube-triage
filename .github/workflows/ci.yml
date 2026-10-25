@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install -e ".[dev]"
+      - run: ruff check .
+      - run: ruff format --check .
+      - run: pytest -q
+      - name: 判定精度の評価 (カテゴリ正解率 90% 未満で失敗)
+        run: kube-triage eval scenarios --min-accuracy 0.9 --report eval-result.md
+      - name: 評価結果をジョブサマリーに表示
+        if: matrix.python-version == '3.12'
+        run: cat eval-result.md >> "$GITHUB_STEP_SUMMARY"
