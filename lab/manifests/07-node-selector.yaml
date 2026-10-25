@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: node-selector
+  namespace: triage-lab
+  labels:
+    app.kubernetes.io/part-of: triage-lab
+  annotations:
+    triage-lab/expected: "UNSCHEDULABLE/node_selector"
+spec:
+  restartPolicy: Always
+  nodeSelector:
+    disktype: nvme-does-not-exist
+  containers:
+    - name: app
+      image: nginx:1.27

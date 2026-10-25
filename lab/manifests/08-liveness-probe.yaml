@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: liveness-probe
+  namespace: triage-lab
+  labels:
+    app.kubernetes.io/part-of: triage-lab
+  annotations:
+    triage-lab/expected: "PROBE_FAILURE/liveness"
+spec:
+  restartPolicy: Always
+  containers:
+    - name: app
+      image: busybox:1.36
+      command: ["sh", "-c", "echo 'Starting application...'; sleep 3600"]
+      livenessProbe:
+        httpGet: {path: /healthz, port: 8080}
+        initialDelaySeconds: 3
+        periodSeconds: 3
+        failureThreshold: 2

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: healthy
+  namespace: triage-lab
+  labels:
+    app.kubernetes.io/part-of: triage-lab
+  annotations:
+    triage-lab/expected: "HEALTHY"
+spec:
+  restartPolicy: Always
+  containers:
+    - name: app
+      image: nginx:1.27

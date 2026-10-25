@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data
+  namespace: triage-lab
+spec:
+  storageClassName: does-not-exist
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests: {storage: 1Gi}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pvc-unbound
+  namespace: triage-lab
+  labels:
+    app.kubernetes.io/part-of: triage-lab
+  annotations:
+    triage-lab/expected: "UNSCHEDULABLE/pvc_unbound"
+spec:
+  restartPolicy: Always
+  containers:
+    - name: app
+      image: nginx:1.27
+      volumeMounts:
+        - {name: data, mountPath: /data}
+  volumes:
+    - name: data
+      persistentVolumeClaim: {claimName: data}

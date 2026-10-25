@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: crash-missing-env
+  namespace: triage-lab
+  labels:
+    app.kubernetes.io/part-of: triage-lab
+  annotations:
+    triage-lab/expected: "CRASH_LOOP/missing_env"
+spec:
+  restartPolicy: Always
+  containers:
+    - name: app
+      image: python:3.12-alpine
+      command: ["python", "-c", "import os; DB_URL = os.environ['DATABASE_URL']"]

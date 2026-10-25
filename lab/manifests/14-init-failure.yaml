@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: init-failure
+  namespace: triage-lab
+  labels:
+    app.kubernetes.io/part-of: triage-lab
+  annotations:
+    triage-lab/expected: "CRASH_LOOP/dependency_unreachable"
+spec:
+  restartPolicy: Always
+  initContainers:
+    - name: migrate
+      image: python:3.12-alpine
+      command: ["python", "-c", "import socket; socket.create_connection(('127.0.0.1', 5432), timeout=3)"]
+  containers:
+    - name: app
+      image: nginx:1.27

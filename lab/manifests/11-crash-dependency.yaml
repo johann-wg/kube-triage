@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: crash-dependency
+  namespace: triage-lab
+  labels:
+    app.kubernetes.io/part-of: triage-lab
+  annotations:
+    triage-lab/expected: "CRASH_LOOP/dependency_unreachable"
+spec:
+  restartPolicy: Always
+  containers:
+    - name: app
+      image: python:3.12-alpine
+      command: ["python", "-c", "import socket; socket.create_connection(('127.0.0.1', 6379), timeout=3)"]

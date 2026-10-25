@@ -105,13 +105,14 @@ kube-triage eval scenarios
 
 現在のシナリオは `kubectl get pod -o json` / `get events -o json` の構造を模した**合成データ**で、
 [scripts/generate_scenarios.py](scripts/generate_scenarios.py) から生成しています。
-次の段階で、kind クラスタ上で実際に障害を再現して収集したデータに置き換えます。
+次の段階で、kind クラスタ上で実際に障害を再現して収集したデータ（[lab/](lab/README.md)）に置き換えます。
 業務で扱った環境のデータは一切含みません。
 
 ## ロードマップ
 
 - [x] ルールベース判定 6 カテゴリ・評価シナリオ 18 件・CI
-- [ ] kind クラスタで障害を再現するマニフェストを追加し、実データで再評価
+- [x] kind クラスタで障害を再現するマニフェスト 15 件と収集スクリプト（[lab/](lab/README.md)）
+- [ ] 実データで再評価し、合成データとの差分をルールに反映
 - [ ] initContainer の判定に対応
 - [ ] ルールで判定できないケースのみ LLM に原因推定させ、ルールのみの場合と正解率を比較
 
