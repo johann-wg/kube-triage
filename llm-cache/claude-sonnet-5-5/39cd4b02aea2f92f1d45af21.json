@@ -1,0 +1,37 @@
+{
+  "model": "claude-sonnet-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 2109,
+    "output_tokens": 423
+  },
+  "result": {
+    "category": "PROBE_FAILURE",
+    "subcause": "liveness",
+    "confidence": 0.8,
+    "title": "Liveness probe がタイムアウトし、コンテナが再起動を繰り返している",
+    "evidence": [
+      {
+        "source": "event/Unhealthy",
+        "text": "Liveness probe failed: Get \"http://10.128.4.21:8080/actuator/health\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+      },
+      {
+        "source": "event/Killing",
+        "text": "Container app failed liveness probe, will be restarted"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState",
+        "text": "terminated: exitCode 137, reason Error"
+      },
+      {
+        "source": "logs/app",
+        "text": "INFO generating monthly report batch=2026-09 rows=1830212"
+      }
+    ],
+    "actions": [
+      "重いレポート生成処理が health エンドポイントの応答を妨げていないか確認し、処理を別スレッドやジョブに分離する",
+      "livenessProbe の timeoutSeconds、periodSeconds、failureThreshold、initialDelaySeconds を見直す(必要なら startupProbe を追加)",
+      "cpu limit 500m やメモリ上限 256Mi が処理量に対して不足していないか、リソース使用状況を確認する"
+    ]
+  }
+}

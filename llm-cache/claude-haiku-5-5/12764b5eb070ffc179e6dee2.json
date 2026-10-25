@@ -1,0 +1,43 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 3988,
+    "output_tokens": 294
+  },
+  "result": {
+    "category": "HEALTHY",
+    "subcause": null,
+    "confidence": 0.95,
+    "title": "Pod は Running かつ Ready で、コンテナは再起動なしに正常起動している",
+    "evidence": [
+      {
+        "source": "status.containerStatuses[app].state",
+        "text": "running: startedAt 2026-10-25T10:24:03Z"
+      },
+      {
+        "source": "status.containerStatuses[app].ready",
+        "text": "true"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "0"
+      },
+      {
+        "source": "status.conditions[type=Ready]",
+        "text": "status True"
+      },
+      {
+        "source": "events/Started",
+        "text": "Container started"
+      },
+      {
+        "source": "logs/app",
+        "text": "Configuration complete; ready for start up / start worker processes (nginx/1.27.5 が起動完了)"
+      }
+    ],
+    "actions": [
+      "現時点で対応は不要。必要に応じて通常どおり監視を継続する"
+    ]
+  }
+}

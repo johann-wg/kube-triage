@@ -1,0 +1,49 @@
+{
+  "model": "claude-opus-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1935,
+    "output_tokens": 616
+  },
+  "result": {
+    "category": "HEALTHY",
+    "subcause": null,
+    "confidence": 0.7,
+    "title": "notification-api は Running かつ Ready で稼働中です。過去に 1 回の異常終了 (exitCode 1) がありますが、再発は確認できないため正常と判定します。",
+    "evidence": [
+      {
+        "source": "pod.phase",
+        "text": "Running"
+      },
+      {
+        "source": "status.conditions[Ready]",
+        "text": "\"status\": \"True\", \"type\": \"Ready\""
+      },
+      {
+        "source": "status.containerStatuses[app].state",
+        "text": "running: startedAt 2026-10-19T03:12:00Z"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "1"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState",
+        "text": "terminated: exitCode 1, reason Error, finishedAt 2026-10-25T09:00:00Z"
+      },
+      {
+        "source": "logs/app",
+        "text": "INFO listening on :8080\nINFO health check ok"
+      },
+      {
+        "source": "events",
+        "text": "[]"
+      }
+    ],
+    "actions": [
+      "lastState の finishedAt (2026-10-25T09:00:00Z) が現在の startedAt (2026-10-19T03:12:00Z) より後になっており時刻が矛盾しているため、ノードの時刻同期と status の取得元を確認する",
+      "前回の異常終了 (exitCode 1) の原因を kubectl logs notification-api -n shop -c app --previous で確認する",
+      "restartCount が今後増加しないか監視する"
+    ]
+  }
+}

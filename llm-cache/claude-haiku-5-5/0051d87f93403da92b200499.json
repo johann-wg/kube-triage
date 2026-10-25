@@ -1,0 +1,45 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 7060,
+    "output_tokens": 658
+  },
+  "result": {
+    "category": "PROBE_FAILURE",
+    "subcause": "readiness",
+    "confidence": 0.93,
+    "title": "readinessProbe の /ready パスが nginx に存在せず 404 となり、Pod が Ready にならない",
+    "evidence": [
+      {
+        "source": "events/Unhealthy (count 24)",
+        "text": "Readiness probe failed: HTTP probe failed with statuscode: 404"
+      },
+      {
+        "source": "logs/app",
+        "text": "2026/10/25 10:27:02 [error] 37#37: *51 open() \"/usr/share/nginx/html/ready\" failed (2: No such file or directory), client: 10.244.0.1, server: localhost, request: \"GET /ready HTTP/1.1\", host: \"10.244.0.11:80\""
+      },
+      {
+        "source": "logs/app",
+        "text": "10.244.0.1 - - [25/Oct/2026:10:27:02 +0000] \"GET /ready HTTP/1.1\" 404 153 \"-\" \"kube-probe/1.37\" \"-\""
+      },
+      {
+        "source": "status.conditions[Ready]",
+        "text": "status: False, reason: ContainersNotReady, message: containers with unready status: [app]"
+      },
+      {
+        "source": "status.containerStatuses[app]",
+        "text": "ready: false, restartCount: 0, state.running.startedAt: 2026-10-25T10:24:32Z"
+      },
+      {
+        "source": "spec.containers[app].readinessProbe.httpGet",
+        "text": "path: /ready, port: 80, scheme: HTTP"
+      }
+    ],
+    "actions": [
+      "コンテナ内で /usr/share/nginx/html/ready が存在するか確認し、アプリが生成すべきヘルスチェック用ファイル・エンドポイントを用意する",
+      "readinessProbe.httpGet.path を実際に応答するパス（例: /）に修正するか、アプリ側で /ready を返すよう対応する",
+      "修正後に Pod の Ready 条件が True になり、Unhealthy イベントが止まったことを確認する"
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1796,
+    "output_tokens": 268
+  },
+  "result": {
+    "category": "UNSCHEDULABLE",
+    "subcause": "node_selector",
+    "confidence": 0.9,
+    "title": "Pod が nodeSelector/affinity に一致するノードがなく、スケジュールされていません。",
+    "evidence": [
+      {
+        "source": "status.conditions[PodScheduled]",
+        "text": "reason: Unschedulable, status: False, message: 0/3 nodes are available: 3 node(s) didn't match Pod's node affinity/selector."
+      }
+    ],
+    "actions": [
+      "Pod spec の nodeSelector / nodeAffinity の指定値と、各ノードのラベル (kubectl get nodes --show-labels) を照合する。",
+      "GPU 等の専用ノードが存在し、対象ラベルが付与されているか確認し、必要ならラベルを追加するか指定を修正する。"
+    ]
+  }
+}

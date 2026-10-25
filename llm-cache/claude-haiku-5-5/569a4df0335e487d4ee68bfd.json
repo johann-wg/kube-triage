@@ -1,0 +1,36 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 3195,
+    "output_tokens": 348
+  },
+  "result": {
+    "category": "CONFIG_ERROR",
+    "subcause": "missing_secret",
+    "confidence": 0.95,
+    "title": "env DB_PASSWORD が参照する Secret db-credentials が存在しないため、コンテナ作成に失敗している",
+    "evidence": [
+      {
+        "source": "status.containerStatuses[app].state.waiting",
+        "text": "reason: CreateContainerConfigError, message: secret \"db-credentials\" not found"
+      },
+      {
+        "source": "events/Failed",
+        "text": "Error: secret \"db-credentials\" not found (count: 18)"
+      },
+      {
+        "source": "spec.containers[app].env[DB_PASSWORD].valueFrom.secretKeyRef",
+        "text": "name: db-credentials, key: password"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "0"
+      }
+    ],
+    "actions": [
+      "kubectl -n triage-lab get secret db-credentials で Secret の有無を確認し、存在しなければ作成する",
+      "Secret を作成済みであれば secretKeyRef の name と key (password) が一致しているか確認する"
+    ]
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "description": "Java アプリ. 接続先 Service 名の DNS 解決失敗",
+  "expected": {
+    "category": "CRASH_LOOP",
+    "subcause": "dependency_unreachable"
+  },
+  "pod": {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "order-service",
+      "namespace": "shop"
+    },
+    "spec": {
+      "containers": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2",
+          "resources": {
+            "limits": {
+              "memory": "256Mi",
+              "cpu": "500m"
+            }
+          }
+        }
+      ]
+    },
+    "status": {
+      "phase": "Running",
+      "conditions": [
+        {
+          "type": "PodScheduled",
+          "status": "True"
+        },
+        {
+          "type": "Ready",
+          "status": "False"
+        }
+      ],
+      "containerStatuses": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2",
+          "ready": false,
+          "restartCount": 5,
+          "state": {
+            "waiting": {
+              "reason": "CrashLoopBackOff",
+              "message": ""
+            }
+          },
+          "lastState": {
+            "terminated": {
+              "reason": "Error",
+              "exitCode": 1,
+              "finishedAt": "2026-10-25T09:00:00Z"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "events": [],
+  "logs": {
+    "app": "INFO  Starting OrderServiceApplication\nERROR HikariPool-1 - Exception during pool initialization.\njava.net.UnknownHostException: postgres-primary.shop.svc.cluster.local\n\tat java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1631)\n"
+  }
+}

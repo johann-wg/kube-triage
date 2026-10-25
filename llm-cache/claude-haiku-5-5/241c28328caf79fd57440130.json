@@ -1,0 +1,33 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1944,
+    "output_tokens": 564
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": "bad_command",
+    "confidence": 0.9,
+    "title": "起動スクリプト ./bin/start.sh が見つからず exit 127 で異常終了を繰り返している",
+    "evidence": [
+      {
+        "source": "status.containerStatuses[app].state.waiting",
+        "text": "reason: CrashLoopBackOff, restartCount: 5"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState.terminated",
+        "text": "exitCode: 127, reason: Error"
+      },
+      {
+        "source": "logs/app",
+        "text": "/bin/sh: 1: ./bin/start.sh: not found"
+      }
+    ],
+    "actions": [
+      "spec の command / args と Dockerfile の ENTRYPOINT・CMD で指定されているパスが、イメージ内に実在するか確認する",
+      "イメージに対象ファイルが存在し実行権限があるか、改行コード (CRLF) や shebang に問題がないか確認する",
+      "イメージのタグ (1.4.2) が想定どおりのビルドを指しているか、レジストリ上のイメージ内容を確認する"
+    ]
+  }
+}

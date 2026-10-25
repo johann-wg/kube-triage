@@ -1,0 +1,37 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1816,
+    "output_tokens": 383
+  },
+  "result": {
+    "category": "UNSCHEDULABLE",
+    "subcause": "insufficient_resources",
+    "confidence": 0.92,
+    "title": "GPU リソース不足のため、4 ノードいずれにもスケジュールできていない",
+    "evidence": [
+      {
+        "source": "status.conditions[PodScheduled].reason",
+        "text": "Unschedulable"
+      },
+      {
+        "source": "status.conditions[PodScheduled].message",
+        "text": "0/4 nodes are available: 4 Insufficient nvidia.com/gpu. preemption: 0/4 nodes are available: 4 No preemption victims found for incoming pod."
+      },
+      {
+        "source": "spec.containers[app].resources.limits",
+        "text": "nvidia.com/gpu: 1"
+      },
+      {
+        "source": "pod.phase",
+        "text": "Pending"
+      }
+    ],
+    "actions": [
+      "クラスタ内の GPU ノードの allocatable 数と、各ノードで既に割り当て済みの nvidia.com/gpu を kubectl describe node で確認する",
+      "GPU を使用している他の Pod を整理するか、GPU ノードを追加してリソースを確保する",
+      "GPU 要求数 (limits) が実際の必要量と合っているか見直す"
+    ]
+  }
+}

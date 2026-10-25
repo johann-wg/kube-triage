@@ -1,0 +1,41 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 3602,
+    "output_tokens": 401
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": "missing_env",
+    "confidence": 0.93,
+    "title": "必須環境変数 DATABASE_URL が未定義のためアプリが異常終了を繰り返している",
+    "evidence": [
+      {
+        "source": "logs/app",
+        "text": "KeyError: 'DATABASE_URL'"
+      },
+      {
+        "source": "status.containerStatuses[app].state.terminated",
+        "text": "exitCode: 1, reason: Error"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "5"
+      },
+      {
+        "source": "event/BackOff",
+        "text": "Back-off restarting failed container app in pod crash-missing-env_triage-lab(734f6c03-90fe-4df3-b679-1234990b8e0a)"
+      },
+      {
+        "source": "spec.containers[app].command",
+        "text": "import os; DB_URL = os.environ['DATABASE_URL']"
+      }
+    ],
+    "actions": [
+      "Pod spec の env / envFrom に DATABASE_URL が正しく定義されているか確認する",
+      "DATABASE_URL を注入する ConfigMap または Secret が存在するか確認する",
+      "環境変数を追加後、Pod を再作成またはロールアウトして再起動が止まるか確認する"
+    ]
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "description": "社内レジストリの証明書エラー. 定義済みの原因 (存在しない / 認証) のどちらでもない",
+  "expected": {
+    "category": "IMAGE_PULL",
+    "subcause": null
+  },
+  "pod": {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "api-internal",
+      "namespace": "shop"
+    },
+    "spec": {
+      "containers": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2",
+          "resources": {
+            "limits": {
+              "memory": "256Mi",
+              "cpu": "500m"
+            }
+          }
+        }
+      ]
+    },
+    "status": {
+      "phase": "Pending",
+      "conditions": [
+        {
+          "type": "PodScheduled",
+          "status": "True"
+        },
+        {
+          "type": "Ready",
+          "status": "False"
+        }
+      ],
+      "containerStatuses": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2",
+          "ready": false,
+          "restartCount": 0,
+          "state": {
+            "waiting": {
+              "reason": "ImagePullBackOff",
+              "message": ""
+            }
+          },
+          "lastState": {}
+        }
+      ]
+    }
+  },
+  "events": [
+    {
+      "type": "Warning",
+      "reason": "Failed",
+      "message": "Failed to pull image \"registry.example.com/shop/api:1.4.2\": rpc error: code = Unknown desc = failed to pull and unpack image: failed to resolve reference: failed to do request: Head https://registry.example.com/v2/shop/api/manifests/1.4.2: tls: failed to verify certificate: x509: certificate signed by unknown authority",
+      "count": 5,
+      "involvedObject": {
+        "kind": "Pod",
+        "name": "api-internal",
+        "namespace": "shop"
+      }
+    }
+  ],
+  "logs": {}
+}

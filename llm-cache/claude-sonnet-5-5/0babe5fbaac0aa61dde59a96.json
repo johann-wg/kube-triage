@@ -1,0 +1,33 @@
+{
+  "model": "claude-sonnet-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1874,
+    "output_tokens": 320
+  },
+  "result": {
+    "category": "CONFIG_ERROR",
+    "subcause": "missing_key",
+    "confidence": 0.97,
+    "title": "Secret shop/db-credentials に参照キー db-password が存在せず、コンテナを作成できない",
+    "evidence": [
+      {
+        "source": "status.containerStatuses[app].state.waiting.reason",
+        "text": "CreateContainerConfigError"
+      },
+      {
+        "source": "status.containerStatuses[app].state.waiting.message",
+        "text": "couldn't find key db-password in Secret shop/db-credentials"
+      },
+      {
+        "source": "status.conditions[PodScheduled]",
+        "text": "True"
+      }
+    ],
+    "actions": [
+      "kubectl get secret db-credentials -n shop -o yaml で Secret に db-password キーが存在するか確認する",
+      "Secret にキー db-password を追加するか、Pod 仕様側の secretKeyRef のキー名を正しい名前に修正する",
+      "修正後に Pod を再作成し、コンテナが起動して Ready になることを確認する"
+    ]
+  }
+}

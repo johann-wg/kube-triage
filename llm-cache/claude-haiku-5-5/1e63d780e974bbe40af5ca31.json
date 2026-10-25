@@ -1,0 +1,36 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1992,
+    "output_tokens": 342
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": "invalid_config",
+    "confidence": 0.9,
+    "title": "設定値 log_level の不正により起動直後に異常終了を繰り返している",
+    "evidence": [
+      {
+        "source": "status.containerStatuses[app].state.waiting.reason",
+        "text": "CrashLoopBackOff"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState.terminated",
+        "text": "exitCode: 2, reason: Error, restartCount: 4"
+      },
+      {
+        "source": "logs/app",
+        "text": "level=info msg=\"loading config\" path=/etc/api/config.yaml"
+      },
+      {
+        "source": "logs/app",
+        "text": "level=fatal msg=\"invalid value for log_level: 'verbose' (expected one of debug, info, warn, error)\""
+      }
+    ],
+    "actions": [
+      "/etc/api/config.yaml の log_level を debug, info, warn, error のいずれかに修正する",
+      "修正した ConfigMap または設定ファイルを反映し、Pod を再作成または再起動して起動を確認する"
+    ]
+  }
+}

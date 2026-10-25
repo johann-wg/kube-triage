@@ -1,0 +1,41 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 2049,
+    "output_tokens": 541
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": "dependency_unreachable",
+    "confidence": 0.88,
+    "title": "initContainer migrate が DB サーバーに接続できず異常終了を繰り返している",
+    "evidence": [
+      {
+        "source": "status.initContainerStatuses[migrate].state.waiting",
+        "text": "reason: CrashLoopBackOff"
+      },
+      {
+        "source": "status.initContainerStatuses[migrate].lastState.terminated",
+        "text": "exitCode: 1, reason: Error, finishedAt: 2026-10-25T09:00:00Z"
+      },
+      {
+        "source": "status.initContainerStatuses[migrate].restartCount",
+        "text": "3"
+      },
+      {
+        "source": "logs/migrate",
+        "text": "psycopg2.OperationalError: could not connect to server: Connection refused"
+      },
+      {
+        "source": "status.conditions[Initialized]",
+        "text": "status: False, reason: ContainersNotInitialized"
+      }
+    ],
+    "actions": [
+      "migrate コンテナから接続先 DB のホスト名・ポートへの到達性を確認する (Service / NetworkPolicy / DB の起動状態)",
+      "DB 側が起動していること、接続先アドレスとポートが設定値と一致していることを確認する",
+      "events が空のため kubectl describe pod と DB 側のログも併せて確認する"
+    ]
+  }
+}

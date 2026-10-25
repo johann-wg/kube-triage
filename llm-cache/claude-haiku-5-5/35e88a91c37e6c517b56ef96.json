@@ -1,0 +1,40 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 3386,
+    "output_tokens": 606
+  },
+  "result": {
+    "category": "IMAGE_PULL",
+    "subcause": "image_not_found",
+    "confidence": 0.95,
+    "title": "コンテナイメージ nginx:this-tag-does-not-exist-12345 が存在しないためイメージ取得に失敗している",
+    "evidence": [
+      {
+        "source": "status.containerStatuses[app].state.waiting.reason",
+        "text": "ErrImagePull"
+      },
+      {
+        "source": "status.containerStatuses[app].state.waiting.message",
+        "text": "rpc error: code = NotFound desc = failed to pull and unpack image \"docker.io/library/nginx:this-tag-does-not-exist-12345\": failed to resolve reference \"docker.io/library/nginx:this-tag-does-not-exist-12345\": docker.io/library/nginx:this-tag-does-not-exist-12345: not found"
+      },
+      {
+        "source": "event/Failed (Warning)",
+        "text": "Failed to pull image \"nginx:this-tag-does-not-exist-12345\": rpc error: code = NotFound desc = failed to pull and unpack image \"docker.io/library/nginx:this-tag-does-not-exist-12345\": failed to resolve reference \"docker.io/library/nginx:this-tag-does-not-exist-12345\": docker.io/library/nginx:this-tag-does-not-exist-12345: not found"
+      },
+      {
+        "source": "event/Failed (Warning)",
+        "text": "Error: ImagePullBackOff"
+      },
+      {
+        "source": "spec.containers[app].image",
+        "text": "nginx:this-tag-does-not-exist-12345"
+      }
+    ],
+    "actions": [
+      "イメージ名とタグが正しいか確認し、レジストリ上に存在するタグ(例: nginx:1.27 など)に修正する",
+      "修正後に Deployment や Pod の image を更新し、Pod が再作成されて Running になるか確認する"
+    ]
+  }
+}

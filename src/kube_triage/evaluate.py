@@ -7,10 +7,12 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
 from kube_triage.bundle import Bundle
+from kube_triage.models import Finding
 from kube_triage.rules import diagnose
 
 
@@ -31,11 +33,14 @@ class CaseResult:
         return self.category_ok and self.expected_subcause == self.predicted_subcause
 
 
-def evaluate(scenario_dir: str | Path) -> list[CaseResult]:
+def evaluate(
+    scenario_dir: str | Path,
+    engine: Callable[[Bundle], list[Finding]] = diagnose,
+) -> list[CaseResult]:
     results = []
     for path in sorted(Path(scenario_dir).glob("*.json")):
         data = json.loads(path.read_text(encoding="utf-8"))
-        main = diagnose(Bundle.from_dict(data))[0]
+        main = engine(Bundle.from_dict(data))[0]
         expected = data["expected"]
         results.append(
             CaseResult(

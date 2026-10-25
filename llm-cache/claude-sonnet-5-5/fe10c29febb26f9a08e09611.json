@@ -1,0 +1,37 @@
+{
+  "model": "claude-sonnet-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1816,
+    "output_tokens": 403
+  },
+  "result": {
+    "category": "UNSCHEDULABLE",
+    "subcause": "insufficient_resources",
+    "confidence": 0.97,
+    "title": "GPU リソース (nvidia.com/gpu) が全ノードで不足しており Pod がスケジュールできません",
+    "evidence": [
+      {
+        "source": "status.conditions[PodScheduled]",
+        "text": "0/4 nodes are available: 4 Insufficient nvidia.com/gpu. preemption: 0/4 nodes are available: 4 No preemption victims found for incoming pod."
+      },
+      {
+        "source": "status.conditions[PodScheduled].reason",
+        "text": "Unschedulable"
+      },
+      {
+        "source": "spec.containers[app].resources.limits",
+        "text": "nvidia.com/gpu: 1"
+      },
+      {
+        "source": "pod.phase",
+        "text": "Pending"
+      }
+    ],
+    "actions": [
+      "各ノードの nvidia.com/gpu の allocatable と割り当て済み量を確認し (kubectl describe node)、空き GPU を使っている Pod がないか調べる",
+      "GPU ノードの追加、または他の GPU ワークロードの停止・縮小で空きを確保する",
+      "GPU デバイスプラグインが全ノードで正常に動作し、GPU が認識されているか確認する"
+    ]
+  }
+}

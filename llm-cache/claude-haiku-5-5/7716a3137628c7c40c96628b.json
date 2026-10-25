@@ -1,0 +1,41 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1911,
+    "output_tokens": 609
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": "bad_command",
+    "confidence": 0.75,
+    "title": "終了コード127（コマンドが見つからない）によりapp コンテナが CrashLoopBackOff を繰り返している可能性が高い",
+    "evidence": [
+      {
+        "source": "status.containerStatuses[app].lastState.terminated",
+        "text": "exitCode: 127, reason: Error, finishedAt: 2026-10-25T09:00:00Z"
+      },
+      {
+        "source": "status.containerStatuses[app].state.waiting",
+        "text": "reason: CrashLoopBackOff"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "2"
+      },
+      {
+        "source": "status.containerStatuses[app].ready",
+        "text": "false"
+      },
+      {
+        "source": "events / logs",
+        "text": "空（判断材料なし）"
+      }
+    ],
+    "actions": [
+      "Deployment の command / args、および image registry.example.com/shop/api:1.4.2 内のエントリポイントのパスとタイプミスを確認する",
+      "kubectl logs や kubectl logs --previous で起動直後のエラーメッセージを取得し、実行ファイル名を照合する",
+      "イメージを手元で実行（docker run など）し、指定したコマンドが存在するか確認する"
+    ]
+  }
+}

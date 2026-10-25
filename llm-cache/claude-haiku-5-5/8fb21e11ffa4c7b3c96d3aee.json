@@ -1,0 +1,37 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1874,
+    "output_tokens": 353
+  },
+  "result": {
+    "category": "CONFIG_ERROR",
+    "subcause": "missing_key",
+    "confidence": 0.93,
+    "title": "Secret shop/db-credentials に キー db-password が存在しないためコンテナを作成できない",
+    "evidence": [
+      {
+        "source": "status.containerStatuses[app].state.waiting.reason",
+        "text": "CreateContainerConfigError"
+      },
+      {
+        "source": "status.containerStatuses[app].state.waiting.message",
+        "text": "couldn't find key db-password in Secret shop/db-credentials"
+      },
+      {
+        "source": "pod.phase",
+        "text": "Pending"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "0"
+      }
+    ],
+    "actions": [
+      "kubectl -n shop get secret db-credentials -o jsonpath='{.data}' で格納されているキー名を確認する",
+      "Secret のキー名と Deployment が参照している secretKeyRef の key (db-password) が一致しているか確認し、不一致なら修正する",
+      "キーを追加または参照先を修正後、Pod を再作成して状態が Running / Ready に変わるか確認する"
+    ]
+  }
+}

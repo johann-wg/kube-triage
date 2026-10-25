@@ -1,0 +1,33 @@
+{
+  "model": "claude-opus-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1816,
+    "output_tokens": 387
+  },
+  "result": {
+    "category": "UNSCHEDULABLE",
+    "subcause": "insufficient_resources",
+    "confidence": 0.95,
+    "title": "GPU (nvidia.com/gpu) を要求しているが、空き GPU を持つノードがなく Pod がスケジュールできない。",
+    "evidence": [
+      {
+        "source": "status.conditions[PodScheduled]",
+        "text": "0/4 nodes are available: 4 Insufficient nvidia.com/gpu. preemption: 0/4 nodes are available: 4 No preemption victims found for incoming pod."
+      },
+      {
+        "source": "spec.containers[app].resources.limits",
+        "text": "nvidia.com/gpu: 1"
+      },
+      {
+        "source": "pod.phase",
+        "text": "Pending"
+      }
+    ],
+    "actions": [
+      "oc describe nodes で各ノードの nvidia.com/gpu の Allocatable と割り当て済み量を確認し、GPU を占有している Pod を特定する",
+      "GPU ノードの追加や不要な GPU 利用 Pod の停止を行い、空き GPU を確保する",
+      "NVIDIA GPU Operator / device plugin が正常に動作し、GPU がノードリソースとして公開されているか確認する"
+    ]
+  }
+}

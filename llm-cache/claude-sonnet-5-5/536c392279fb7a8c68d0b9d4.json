@@ -1,0 +1,40 @@
+{
+  "model": "claude-sonnet-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1935,
+    "output_tokens": 315
+  },
+  "result": {
+    "category": "HEALTHY",
+    "subcause": null,
+    "confidence": 0.85,
+    "title": "Pod は Running かつ Ready で、ログも正常なため異常は見られない",
+    "evidence": [
+      {
+        "source": "pod.phase",
+        "text": "Running"
+      },
+      {
+        "source": "status.conditions[Ready]",
+        "text": "status: True"
+      },
+      {
+        "source": "status.containerStatuses[app].state",
+        "text": "running: startedAt 2026-10-19T03:12:00Z"
+      },
+      {
+        "source": "logs/app",
+        "text": "INFO listening on :8080\nINFO health check ok"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState",
+        "text": "terminated: exitCode 1, reason Error (restartCount 1)"
+      }
+    ],
+    "actions": [
+      "restartCount が 1 であるため、過去の終了(exitCode 1)の原因を以前のログ (kubectl logs --previous) で確認する",
+      "再起動が今後増加しないか restartCount を継続的に監視する"
+    ]
+  }
+}

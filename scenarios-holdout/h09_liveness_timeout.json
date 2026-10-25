@@ -1,0 +1,90 @@
+{
+  "description": "高負荷で Liveness Probe がタイムアウト",
+  "expected": {
+    "category": "PROBE_FAILURE",
+    "subcause": "liveness"
+  },
+  "pod": {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "report-api",
+      "namespace": "shop"
+    },
+    "spec": {
+      "containers": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2",
+          "resources": {
+            "limits": {
+              "memory": "256Mi",
+              "cpu": "500m"
+            }
+          }
+        }
+      ]
+    },
+    "status": {
+      "phase": "Running",
+      "conditions": [
+        {
+          "type": "PodScheduled",
+          "status": "True"
+        },
+        {
+          "type": "Ready",
+          "status": "False"
+        }
+      ],
+      "containerStatuses": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2",
+          "ready": false,
+          "restartCount": 3,
+          "state": {
+            "waiting": {
+              "reason": "CrashLoopBackOff",
+              "message": ""
+            }
+          },
+          "lastState": {
+            "terminated": {
+              "reason": "Error",
+              "exitCode": 137,
+              "finishedAt": "2026-10-25T09:00:00Z"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "events": [
+    {
+      "type": "Warning",
+      "reason": "Unhealthy",
+      "message": "Liveness probe failed: Get \"http://10.128.4.21:8080/actuator/health\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+      "count": 9,
+      "involvedObject": {
+        "kind": "Pod",
+        "name": "report-api",
+        "namespace": "shop"
+      }
+    },
+    {
+      "type": "Normal",
+      "reason": "Killing",
+      "message": "Container app failed liveness probe, will be restarted",
+      "count": 3,
+      "involvedObject": {
+        "kind": "Pod",
+        "name": "report-api",
+        "namespace": "shop"
+      }
+    }
+  ],
+  "logs": {
+    "app": "INFO generating monthly report batch=2026-09 rows=1830212\n"
+  }
+}

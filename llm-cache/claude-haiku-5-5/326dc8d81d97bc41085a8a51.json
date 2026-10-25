@@ -1,0 +1,37 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1886,
+    "output_tokens": 398
+  },
+  "result": {
+    "category": "UNSCHEDULABLE",
+    "subcause": "insufficient_resources",
+    "confidence": 0.95,
+    "title": "全3ノードでメモリ不足のためPodをスケジュールできない",
+    "evidence": [
+      {
+        "source": "events/FailedScheduling",
+        "text": "0/3 nodes are available: 3 Insufficient memory."
+      },
+      {
+        "source": "status.conditions[PodScheduled]",
+        "text": "reason: Unschedulable, status: False, message: 0/3 nodes are available: 3 Insufficient memory. preemption: 0/3 nodes are available: 3 No preemption victims found for incoming pod."
+      },
+      {
+        "source": "status.containerStatuses",
+        "text": "[] (コンテナ未作成)"
+      },
+      {
+        "source": "spec.containers[app].resources.limits",
+        "text": "cpu: 500m, memory: 256Mi"
+      }
+    ],
+    "actions": [
+      "各ノードの allocatable メモリと既存 Pod の requests 合計を確認し、空きメモリが足りているか調べる",
+      "batch-bigmem の memory request/limit が実際の必要量に対して妥当か見直す",
+      "ノードのメモリ増設、またはクラスタの autoscaler による新規ノード追加を検討する"
+    ]
+  }
+}

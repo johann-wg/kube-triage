@@ -1,0 +1,41 @@
+{
+  "model": "claude-sonnet-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1997,
+    "output_tokens": 443
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": "invalid_config",
+    "confidence": 0.5,
+    "title": "Javaヒープ不足(OutOfMemoryError)でアプリが異常終了を繰り返しているが、コンテナのOOMKilledではなくJVM内部のヒープ枯渇が原因",
+    "evidence": [
+      {
+        "source": "logs/app",
+        "text": "Exception in thread \"main\" java.lang.OutOfMemoryError: Java heap space"
+      },
+      {
+        "source": "logs/app",
+        "text": "INFO loading 12000000 records"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState",
+        "text": "terminated: exitCode 1, reason Error"
+      },
+      {
+        "source": "status.containerStatuses[app].state",
+        "text": "waiting: reason CrashLoopBackOff"
+      },
+      {
+        "source": "spec.containers[app].resources.limits",
+        "text": "memory: 256Mi"
+      }
+    ],
+    "actions": [
+      "JVMの最大ヒープ設定(-Xmx や MaxRAMPercentage)とコンテナのメモリ上限256Miの整合性を確認し、必要に応じて調整する",
+      "1200万件を一度に読み込まない処理(バッチ分割・ストリーム処理)に見直す",
+      "メモリlimitの引き上げを検討し、再デプロイ後にrestartCountとログを確認する"
+    ]
+  }
+}

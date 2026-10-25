@@ -1,0 +1,36 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1964,
+    "output_tokens": 356
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": "dependency_unreachable",
+    "confidence": 0.85,
+    "title": "データベース(10.96.14.7:5432)への接続タイムアウトにより起動直後に異常終了を繰り返している",
+    "evidence": [
+      {
+        "source": "status.containerStatuses[app].state.waiting.reason",
+        "text": "CrashLoopBackOff"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState.terminated",
+        "text": "exitCode: 1, reason: Error"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "5"
+      },
+      {
+        "source": "logs/app",
+        "text": "level=error msg=\"db init failed\" err=\"dial tcp 10.96.14.7:5432: i/o timeout\""
+      }
+    ],
+    "actions": [
+      "10.96.14.7:5432 への疎通を確認する (NetworkPolicy、Service/Endpoints、DB 側の稼働状況を確認)",
+      "inventory-worker が参照する DB 接続先の設定値(ホスト・ポート)が正しいか確認する"
+    ]
+  }
+}

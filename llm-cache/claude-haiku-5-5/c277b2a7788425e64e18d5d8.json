@@ -1,0 +1,45 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 3924,
+    "output_tokens": 867
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": "dependency_unreachable",
+    "confidence": 0.9,
+    "title": "initContainer migrate が 127.0.0.1:5432 への接続を拒否されて異常終了を繰り返しており、依存先に到達できないことが原因と考えられる",
+    "evidence": [
+      {
+        "source": "spec.containers[migrate].command",
+        "text": "[\"python\",\"-c\",\"import socket; socket.create_connection(('127.0.0.1', 5432), timeout=3)\"]"
+      },
+      {
+        "source": "logs/migrate",
+        "text": "ConnectionRefusedError: [Errno 111] Connection refused"
+      },
+      {
+        "source": "status.initContainerStatuses[migrate].state.terminated",
+        "text": "exitCode: 1, reason: Error"
+      },
+      {
+        "source": "status.initContainerStatuses[migrate].restartCount",
+        "text": "5"
+      },
+      {
+        "source": "status.conditions[Initialized]",
+        "text": "reason: ContainersNotInitialized, message: containers with incomplete status: [migrate]"
+      },
+      {
+        "source": "event/BackOff",
+        "text": "Back-off restarting failed container migrate in pod init-failure_triage-lab(4b5883a4-a824-42e9-b682-a4518f9f83ae)"
+      }
+    ],
+    "actions": [
+      "migrate コンテナの接続先 127.0.0.1 は Pod 自身のネットワーク名前空間を指すため、実際の DB の Service 名またはホストに接続先を修正する",
+      "接続先の 5432 番ポートで DB が起動しているか、Service・Endpoints の状態を確認する",
+      "接続先を修正後に Pod を再作成し、migrate コンテナが Completed で終了するか確認する"
+    ]
+  }
+}

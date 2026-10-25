@@ -1,0 +1,33 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1866,
+    "output_tokens": 302
+  },
+  "result": {
+    "category": "CONFIG_ERROR",
+    "subcause": "missing_configmap",
+    "confidence": 0.93,
+    "title": "ConfigMap api-config が存在しないためコンテナを作成できない",
+    "evidence": [
+      {
+        "source": "status.containerStatuses[app].state.waiting.reason",
+        "text": "CreateContainerConfigError"
+      },
+      {
+        "source": "status.containerStatuses[app].state.waiting.message",
+        "text": "configmap \"api-config\" not found"
+      },
+      {
+        "source": "status.conditions",
+        "text": "PodScheduled=True, Ready=False"
+      }
+    ],
+    "actions": [
+      "namespace shop に ConfigMap api-config が存在するか kubectl get configmap -n shop で確認する",
+      "Pod が参照している ConfigMap 名と Deployment の envFrom や volumes の定義が一致しているか確認する",
+      "ConfigMap を作成するか、参照名を正しい名前に修正して再デプロイする"
+    ]
+  }
+}

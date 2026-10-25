@@ -1,0 +1,37 @@
+{
+  "model": "claude-sonnet-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1964,
+    "output_tokens": 385
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": "dependency_unreachable",
+    "confidence": 0.9,
+    "title": "DB(10.96.14.7:5432)への接続がタイムアウトし、アプリが異常終了を繰り返している",
+    "evidence": [
+      {
+        "source": "logs/app",
+        "text": "level=error msg=\"db init failed\" err=\"dial tcp 10.96.14.7:5432: i/o timeout\""
+      },
+      {
+        "source": "status.containerStatuses[app].state.waiting",
+        "text": "CrashLoopBackOff"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState.terminated",
+        "text": "exitCode: 1, reason: Error"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "5"
+      }
+    ],
+    "actions": [
+      "接続先 10.96.14.7:5432 に対応する Service/Endpoints が存在し、DB Pod が稼働しているか確認する",
+      "NetworkPolicy やファイアウォールで shop 名前空間から DB への 5432 番ポートが遮断されていないか確認する",
+      "同一名前空間の別 Pod から nc や psql で DB への疎通を確認する"
+    ]
+  }
+}

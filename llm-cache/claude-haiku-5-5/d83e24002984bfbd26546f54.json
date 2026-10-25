@@ -1,0 +1,45 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 4048,
+    "output_tokens": 563
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": "permission",
+    "confidence": 0.9,
+    "title": "nginx が /var/cache/nginx への書き込み権限不足で起動直後に終了を繰り返している (runAsUser 1000 で root 権限を必要とする処理を実施)",
+    "evidence": [
+      {
+        "source": "logs/app",
+        "text": "nginx: [emerg] mkdir() \"/var/cache/nginx/client_temp\" failed (13: Permission denied)"
+      },
+      {
+        "source": "logs/app",
+        "text": "10-listen-on-ipv6-by-default.sh: info: can not modify /etc/nginx/conf.d/default.conf (read-only file system?)"
+      },
+      {
+        "source": "spec.securityContext",
+        "text": "runAsUser: 1000"
+      },
+      {
+        "source": "status.containerStatuses[app].state.terminated",
+        "text": "exitCode: 1, reason: Error"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "5"
+      },
+      {
+        "source": "event/BackOff",
+        "text": "Back-off restarting failed container app in pod crash-permission_triage-lab"
+      }
+    ],
+    "actions": [
+      "コンテナを非 root ユーザーで動かす場合は /var/cache/nginx や /var/run などの書き込みが必要なパスを emptyDir 等のボリュームでマウントするか、nginx 用の非 root 対応イメージ (nginxinc/nginx-unprivileged 等) を使用する",
+      "runAsUser の値と、イメージ内で対象ディレクトリの所有者・パーミッションが一致しているか確認する",
+      "kubectl logs --previous で直前の終了時ログを確認し、権限エラーが継続して出ていないか確かめる"
+    ]
+  }
+}

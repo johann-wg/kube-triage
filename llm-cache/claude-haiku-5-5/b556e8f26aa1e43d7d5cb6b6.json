@@ -1,0 +1,33 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 2020,
+    "output_tokens": 357
+  },
+  "result": {
+    "category": "IMAGE_PULL",
+    "subcause": "registry_auth",
+    "confidence": 0.8,
+    "title": "レジストリの TLS 証明書を信頼できず、イメージ registry.example.com/shop/api:1.4.2 の取得に失敗している",
+    "evidence": [
+      {
+        "source": "event/Failed",
+        "text": "Failed to pull image \"registry.example.com/shop/api:1.4.2\": ... tls: failed to verify certificate: x509: certificate signed by unknown authority (count: 5)"
+      },
+      {
+        "source": "status.containerStatuses[app].state.waiting",
+        "text": "reason: ImagePullBackOff"
+      },
+      {
+        "source": "status.conditions",
+        "text": "PodScheduled=True, Ready=False"
+      }
+    ],
+    "actions": [
+      "ノードまたはコンテナランタイムに registry.example.com の CA 証明書を配置し、信頼されるよう設定する",
+      "レジストリの証明書チェーンが正しいか openssl 等で確認する",
+      "イメージ取得に imagePullSecrets が必要か、およびレジストリの認証設定を確認する"
+    ]
+  }
+}

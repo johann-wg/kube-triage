@@ -1,0 +1,36 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1922,
+    "output_tokens": 334
+  },
+  "result": {
+    "category": "PROBE_FAILURE",
+    "subcause": "readiness",
+    "confidence": 0.9,
+    "title": "readinessプローブが HTTP 503 で失敗し、Pod が Ready になれていない",
+    "evidence": [
+      {
+        "source": "events[0]",
+        "text": "reason: Unhealthy, type: Warning, count: 30, message: Readiness probe failed: HTTP probe failed with statuscode: 503"
+      },
+      {
+        "source": "status.conditions[Ready]",
+        "text": "status: False"
+      },
+      {
+        "source": "status.containerStatuses[app].state",
+        "text": "running startedAt: 2026-10-25T09:00:00Z (コンテナは起動中)"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "0"
+      }
+    ],
+    "actions": [
+      "readinessプローブのエンドポイントが 503 を返す原因（依存サービスの接続先、初期化処理の完了状況）をアプリログで確認する",
+      "readinessプローブの path・port・initialDelaySeconds が適切か確認する"
+    ]
+  }
+}

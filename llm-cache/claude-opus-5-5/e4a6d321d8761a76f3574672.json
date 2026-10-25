@@ -1,0 +1,41 @@
+{
+  "model": "claude-opus-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1997,
+    "output_tokens": 696
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": null,
+    "confidence": 0.6,
+    "title": "Java ヒープ不足 (OutOfMemoryError) でアプリが exitCode 1 で異常終了し、CrashLoopBackOff を繰り返しています。カーネルによる OOMKilled ではありません。",
+    "evidence": [
+      {
+        "source": "logs/app",
+        "text": "Exception in thread \"main\" java.lang.OutOfMemoryError: Java heap space"
+      },
+      {
+        "source": "logs/app",
+        "text": "INFO loading 12000000 records"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState",
+        "text": "terminated: exitCode 1, reason Error"
+      },
+      {
+        "source": "status.containerStatuses[app].state",
+        "text": "waiting: reason CrashLoopBackOff, restartCount 5"
+      },
+      {
+        "source": "spec.containers[app].resources.limits",
+        "text": "memory: 256Mi"
+      }
+    ],
+    "actions": [
+      "JVM のヒープ設定 (-Xmx や -XX:MaxRAMPercentage) を確認し、memory limit 256Mi に対して処理量 (12000000 件) を扱える大きさか見直してください。",
+      "memory limit とヒープサイズの引き上げ、またはレコードを分割・ストリーミングして読み込む実装への変更を検討してください。",
+      "image が registry.example.com/shop/api:1.4.2 になっています。analytics-batch 用として意図したイメージか確認してください。"
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1955,
+    "output_tokens": 381
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": "dependency_unreachable",
+    "confidence": 0.85,
+    "title": "起動後に redis-master:6379 へ接続できず終了を繰り返している (CrashLoopBackOff)",
+    "evidence": [
+      {
+        "source": "status.containerStatuses[app].state.waiting.reason",
+        "text": "CrashLoopBackOff"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState.terminated",
+        "text": "exitCode: 1, reason: Error"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "3"
+      },
+      {
+        "source": "logs/app",
+        "text": "ERROR Error 111 connecting to redis-master:6379. Connection refused."
+      }
+    ],
+    "actions": [
+      "redis-master Service と対応する Pod が稼働中か、Endpoints が存在するか確認する (kubectl get svc,endpoints redis-master -n shop)",
+      "shop namespace 内で redis-master:6379 に到達できるか (DNS 解決・NetworkPolicy を含む) を確認する",
+      "接続先ホスト名・ポートの設定値がアプリの設定と一致しているか確認する"
+    ]
+  }
+}

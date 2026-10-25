@@ -1,0 +1,37 @@
+{
+  "model": "claude-sonnet-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 2028,
+    "output_tokens": 414
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": "dependency_unreachable",
+    "confidence": 0.9,
+    "title": "DBホスト postgres-primary.shop.svc.cluster.local の名前解決に失敗し、アプリが起動直後に異常終了を繰り返している",
+    "evidence": [
+      {
+        "source": "logs/app",
+        "text": "ERROR HikariPool-1 - Exception during pool initialization."
+      },
+      {
+        "source": "logs/app",
+        "text": "java.net.UnknownHostException: postgres-primary.shop.svc.cluster.local"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState",
+        "text": "terminated: exitCode 1, reason Error"
+      },
+      {
+        "source": "status.containerStatuses[app].state",
+        "text": "waiting: reason CrashLoopBackOff (restartCount 5)"
+      }
+    ],
+    "actions": [
+      "shop 名前空間に postgres-primary という Service が存在し、Endpoints があるか確認する (oc get svc,endpoints -n shop)",
+      "Service 名・名前空間のスペルや接続設定 (JDBC URL) が正しいか確認する",
+      "クラスタ DNS (CoreDNS / dns-default) が正常に動作しているか、Pod から nslookup で名前解決を確認する"
+    ]
+  }
+}

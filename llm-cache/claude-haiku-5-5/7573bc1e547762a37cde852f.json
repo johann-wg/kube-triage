@@ -1,0 +1,41 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 2103,
+    "output_tokens": 615
+  },
+  "result": {
+    "category": "PROBE_FAILURE",
+    "subcause": "liveness",
+    "confidence": 0.85,
+    "title": "起動途中のアプリに対して liveness probe が接続拒否で失敗し、コンテナが再起動されている",
+    "evidence": [
+      {
+        "source": "events/Unhealthy",
+        "text": "Liveness probe failed: Get \"http://10.128.2.15:8080/healthz\": dial tcp 10.128.2.15:8080: connect: connection refused (count 12)"
+      },
+      {
+        "source": "events/Killing",
+        "text": "Container app failed liveness probe, will be restarted (count 4)"
+      },
+      {
+        "source": "logs/app",
+        "text": "Starting application...\nLoading model weights (this may take a while)"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState",
+        "text": "terminated exitCode 137, reason Error (OOMKilled ではない)"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "4"
+      }
+    ],
+    "actions": [
+      "liveness probe の initialDelaySeconds や failureThreshold を、モデル読み込みに要する起動時間以上に延長する",
+      "起動完了を待つ場合は startupProbe の追加を検討する",
+      "念のため memory limit 256Mi に対して実使用量が余裕を持つか確認する"
+    ]
+  }
+}

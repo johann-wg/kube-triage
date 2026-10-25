@@ -1,0 +1,37 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1997,
+    "output_tokens": 1094
+  },
+  "result": {
+    "category": "OOM_KILLED",
+    "subcause": null,
+    "confidence": 0.7,
+    "title": "アプリケーションが Java ヒープ不足 (OutOfMemoryError) で終了を繰り返しており、メモリ不足が原因と考えられる",
+    "evidence": [
+      {
+        "source": "logs/app",
+        "text": "INFO loading 12000000 records / Exception in thread \"main\" java.lang.OutOfMemoryError: Java heap space"
+      },
+      {
+        "source": "spec.containers[app].resources.limits",
+        "text": "memory: 256Mi"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState.terminated",
+        "text": "exitCode: 1, reason: Error (OOMKilled ではない)"
+      },
+      {
+        "source": "status.containerStatuses[app]",
+        "text": "restartCount: 5, state.waiting.reason: CrashLoopBackOff"
+      }
+    ],
+    "actions": [
+      "JVM の -Xmx などヒープ設定がコンテナのメモリ上限 256Mi に対して適切か確認し、必要に応じてメモリ上限を引き上げる",
+      "バッチが一度に読み込むレコード数 (12000000 件) を減らす、またはページ分割・ストリーム処理に変更できるか検討する",
+      "kubectl logs --previous で終了直前のログと、ヒープダンプ設定の有無を確認する"
+    ]
+  }
+}

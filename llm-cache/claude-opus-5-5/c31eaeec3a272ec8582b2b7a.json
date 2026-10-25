@@ -1,0 +1,41 @@
+{
+  "model": "claude-opus-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 2109,
+    "output_tokens": 490
+  },
+  "result": {
+    "category": "PROBE_FAILURE",
+    "subcause": "liveness",
+    "confidence": 0.8,
+    "title": "重い月次レポート処理中に liveness probe がタイムアウトし、コンテナが繰り返し再起動されています。",
+    "evidence": [
+      {
+        "source": "event/Unhealthy",
+        "text": "Liveness probe failed: Get \"http://10.128.4.21:8080/actuator/health\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+      },
+      {
+        "source": "event/Killing",
+        "text": "Container app failed liveness probe, will be restarted"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState",
+        "text": "exitCode: 137, reason: Error"
+      },
+      {
+        "source": "status.containerStatuses[app].state",
+        "text": "reason: CrashLoopBackOff"
+      },
+      {
+        "source": "logs/app",
+        "text": "INFO generating monthly report batch=2026-09 rows=1830212"
+      }
+    ],
+    "actions": [
+      "liveness probe の timeoutSeconds / failureThreshold を見直し、重いバッチ処理中でもヘルスチェックに応答できる設定にする",
+      "月次レポート生成をリクエスト処理スレッドから分離する（非同期化や別 Job 化）か、CPU limit 500m が不足していないか CPU スロットリングを確認する",
+      "exitCode 137 の終了理由が OOMKilled でないことをノードのイベントや kubectl describe で確認し、メモリ使用量も監視する"
+    ]
+  }
+}

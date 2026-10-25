@@ -1,0 +1,51 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1850,
+    "output_tokens": 346
+  },
+  "result": {
+    "category": "HEALTHY",
+    "subcause": null,
+    "confidence": 0.95,
+    "title": "Pod api-healthy は Running・Ready で再起動もなく、異常は見当たらない",
+    "evidence": [
+      {
+        "source": "pod.phase",
+        "text": "Running"
+      },
+      {
+        "source": "status.conditions[Ready]",
+        "text": "status: True"
+      },
+      {
+        "source": "status.conditions[PodScheduled]",
+        "text": "status: True"
+      },
+      {
+        "source": "status.containerStatuses[app].ready",
+        "text": "true"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "0"
+      },
+      {
+        "source": "status.containerStatuses[app].state",
+        "text": "running.startedAt: 2026-10-25T09:00:00Z"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState",
+        "text": "{} (前回終了情報なし)"
+      },
+      {
+        "source": "events",
+        "text": "[] (異常イベントなし)"
+      }
+    ],
+    "actions": [
+      "現時点で対応は不要。必要に応じて監視でメモリ使用量(上限256Mi)の推移を確認する"
+    ]
+  }
+}

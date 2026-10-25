@@ -1,0 +1,33 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1982,
+    "output_tokens": 393
+  },
+  "result": {
+    "category": "IMAGE_PULL",
+    "subcause": "image_not_found",
+    "confidence": 0.95,
+    "title": "イメージ registry.example.com/shop/api:1.4.2x が存在せず取得に失敗している (ImagePullBackOff)",
+    "evidence": [
+      {
+        "source": "status.containerStatuses[app].state.waiting",
+        "text": "reason: ImagePullBackOff, message: Back-off pulling image"
+      },
+      {
+        "source": "event/Failed",
+        "text": "Failed to pull image \"registry.example.com/shop/api:1.4.2x\": rpc error: code = NotFound desc = failed to pull and unpack image: registry.example.com/shop/api:1.4.2x: not found"
+      },
+      {
+        "source": "spec.containers[app].image",
+        "text": "registry.example.com/shop/api:1.4.2x"
+      }
+    ],
+    "actions": [
+      "イメージのタグ名が正しいか確認する (例: 1.4.2x は誤記の可能性があり、1.4.2 など正しいタグに修正する)",
+      "レジストリ上に registry.example.com/shop/api のタグが存在するか確認する",
+      "修正後に Deployment のイメージを更新し、Pod が Running になるか確認する"
+    ]
+  }
+}

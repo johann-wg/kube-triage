@@ -1,0 +1,36 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1986,
+    "output_tokens": 606
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": null,
+    "confidence": 0.7,
+    "title": "起動時に Python モジュール fastapi が見つからず異常終了を繰り返している (CrashLoopBackOff)",
+    "evidence": [
+      {
+        "source": "logs/app",
+        "text": "ModuleNotFoundError: No module named 'fastapi'"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState.terminated",
+        "text": "exitCode: 1, reason: Error"
+      },
+      {
+        "source": "status.containerStatuses[app].state.waiting",
+        "text": "reason: CrashLoopBackOff"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "5"
+      }
+    ],
+    "actions": [
+      "イメージ registry.example.com/shop/api:1.4.2 に fastapi が含まれているか確認し、requirements や Dockerfile のインストール工程を見直す",
+      "イメージのタグとデプロイ対象が想定どおりか確認し、必要なら正しいバージョンへ差し替える"
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "model": "claude-sonnet-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 2010,
+    "output_tokens": 366
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": "permission",
+    "confidence": 0.85,
+    "title": "読み取り専用ファイルシステムへの書き込みに失敗し、コンテナが起動後に異常終了を繰り返している",
+    "evidence": [
+      {
+        "source": "logs/app",
+        "text": "OSError: [Errno 30] Read-only file system: '/app/cache'"
+      },
+      {
+        "source": "status.containerStatuses[app].state.waiting.reason",
+        "text": "CrashLoopBackOff"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState.terminated",
+        "text": "exitCode: 1, reason: Error"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "5"
+      }
+    ],
+    "actions": [
+      "Pod/コンテナの securityContext.readOnlyRootFilesystem が true になっていないか確認し、必要なら false にする",
+      "書き込み先 /app/cache に emptyDir などの書き込み可能なボリュームをマウントする",
+      "CACHE_DIR の設定値を、書き込み可能なパス (例: /tmp) に変更できるか検討する"
+    ]
+  }
+}

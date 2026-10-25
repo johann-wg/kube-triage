@@ -1,0 +1,36 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1967,
+    "output_tokens": 353
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": "permission",
+    "confidence": 0.85,
+    "title": "nginx が /var/cache/nginx/client_temp の作成権限を持たず起動直後に終了を繰り返している",
+    "evidence": [
+      {
+        "source": "logs/app",
+        "text": "nginx: [emerg] mkdir() \"/var/cache/nginx/client_temp\" failed (13: Permission denied)"
+      },
+      {
+        "source": "status.containerStatuses[app].state.waiting.reason",
+        "text": "CrashLoopBackOff"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState.terminated",
+        "text": "exitCode: 1, reason: Error"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "5"
+      }
+    ],
+    "actions": [
+      "securityContext の runAsUser と、/var/cache/nginx など書き込みが必要なパスの所有権・権限を確認する",
+      "キャッシュ用途のディレクトリを emptyDir ボリュームとしてマウントするなど、書き込み先を許可された場所に変更する"
+    ]
+  }
+}

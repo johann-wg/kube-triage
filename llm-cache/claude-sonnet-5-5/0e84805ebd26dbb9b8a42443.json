@@ -1,0 +1,41 @@
+{
+  "model": "claude-sonnet-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1986,
+    "output_tokens": 429
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": "bad_command",
+    "confidence": 0.6,
+    "title": "アプリが必要な Python モジュール fastapi をイメージ内に見つけられず、起動直後に異常終了を繰り返している",
+    "evidence": [
+      {
+        "source": "logs/app",
+        "text": "ModuleNotFoundError: No module named 'fastapi'"
+      },
+      {
+        "source": "status.containerStatuses[app].state.waiting.reason",
+        "text": "CrashLoopBackOff"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState.terminated",
+        "text": "exitCode: 1, reason: Error"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "5"
+      },
+      {
+        "source": "spec.containers[app].image",
+        "text": "registry.example.com/shop/api:1.4.2"
+      }
+    ],
+    "actions": [
+      "イメージ registry.example.com/shop/api:1.4.2 に fastapi がインストールされているか確認する (requirements.txt や Dockerfile の pip install を見直す)",
+      "Pod 名 ml-scorer に対して意図したイメージが指定されているか確認する (api イメージが ML 用途と合っているか)",
+      "依存関係を含めてイメージを再ビルド・再デプロイし、Pod が正常に起動するか確認する"
+    ]
+  }
+}

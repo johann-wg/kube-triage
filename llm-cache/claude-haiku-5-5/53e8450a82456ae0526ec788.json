@@ -1,0 +1,40 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1960,
+    "output_tokens": 529
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": "invalid_config",
+    "confidence": 0.9,
+    "title": "設定ファイル /etc/gateway/routes.yaml の YAML パースエラーにより、コンテナが起動直後に異常終了を繰り返している",
+    "evidence": [
+      {
+        "source": "logs/app",
+        "text": "loading /etc/gateway/routes.yaml"
+      },
+      {
+        "source": "logs/app",
+        "text": "Error: failed to parse config: yaml: line 12: did not find expected key"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState.terminated",
+        "text": "exitCode: 1, reason: Error"
+      },
+      {
+        "source": "status.containerStatuses[app].state.waiting",
+        "text": "reason: CrashLoopBackOff"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "5"
+      }
+    ],
+    "actions": [
+      "kubectl exec または ConfigMap の内容から /etc/gateway/routes.yaml の 12 行目付近のインデントや構文を確認する",
+      "該当する ConfigMap またはイメージ内の routes.yaml を修正し、YAML の文法を検証してから再デプロイする"
+    ]
+  }
+}

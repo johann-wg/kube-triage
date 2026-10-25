@@ -1,0 +1,32 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1794,
+    "output_tokens": 309
+  },
+  "result": {
+    "category": "UNSCHEDULABLE",
+    "subcause": "taint",
+    "confidence": 0.95,
+    "title": "全ノードが未許容の taint (dedicated: infra) を持つため Pod をスケジュールできない",
+    "evidence": [
+      {
+        "source": "status.conditions[PodScheduled].reason",
+        "text": "Unschedulable"
+      },
+      {
+        "source": "status.conditions[PodScheduled].message",
+        "text": "0/3 nodes are available: 3 node(s) had untolerated taint {dedicated: infra}."
+      },
+      {
+        "source": "pod.phase",
+        "text": "Pending"
+      }
+    ],
+    "actions": [
+      "ノードの taint 一覧 (kubectl describe nodes や kubectl get nodes -o custom-columns) を確認し、dedicated=infra の taint が意図どおりか確認する",
+      "Pod spec に対応する tolerations を追加するか、api ワークロードを配置できるノードに taint を付与・削除する方針を決める"
+    ]
+  }
+}

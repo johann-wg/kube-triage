@@ -1,0 +1,33 @@
+{
+  "model": "claude-opus-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 2020,
+    "output_tokens": 606
+  },
+  "result": {
+    "category": "IMAGE_PULL",
+    "subcause": null,
+    "confidence": 0.8,
+    "title": "レジストリのTLS証明書が信頼されていない (x509: certificate signed by unknown authority) ため、イメージを取得できず ImagePullBackOff になっています。",
+    "evidence": [
+      {
+        "source": "status.containerStatuses[app].state.waiting",
+        "text": "reason: ImagePullBackOff"
+      },
+      {
+        "source": "event/Failed",
+        "text": "Failed to pull image \"registry.example.com/shop/api:1.4.2\": ... Head https://registry.example.com/v2/shop/api/manifests/1.4.2: tls: failed to verify certificate: x509: certificate signed by unknown authority"
+      },
+      {
+        "source": "spec.containers[app].image",
+        "text": "registry.example.com/shop/api:1.4.2"
+      }
+    ],
+    "actions": [
+      "registry.example.com のサーバー証明書の発行元 (社内CAなど) を確認し、ノードのコンテナランタイムの信頼済みCAに追加する (OpenShift の場合は image.config.openshift.io/cluster の additionalTrustedCA を設定する)",
+      "ノード上で crictl pull registry.example.com/shop/api:1.4.2 を実行し、証明書エラーが解消されたか確認する",
+      "レジストリ側の証明書が期限切れ・差し替えされていないか、中間証明書を含む証明書チェーンが正しく提供されているかを確認する"
+    ]
+  }
+}

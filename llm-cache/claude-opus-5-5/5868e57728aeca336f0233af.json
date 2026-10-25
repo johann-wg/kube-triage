@@ -1,0 +1,37 @@
+{
+  "model": "claude-opus-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 2002,
+    "output_tokens": 388
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": "missing_env",
+    "confidence": 0.92,
+    "title": "必須環境変数 DB_DSN が未設定のため、app コンテナが起動直後に panic し CrashLoopBackOff を繰り返しています。",
+    "evidence": [
+      {
+        "source": "logs/app",
+        "text": "panic: required setting DB_DSN is empty; set it via environment"
+      },
+      {
+        "source": "status.containerStatuses[app].state",
+        "text": "reason: CrashLoopBackOff"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState",
+        "text": "exitCode: 2, reason: Error"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "5"
+      }
+    ],
+    "actions": [
+      "Deployment の app コンテナ定義に環境変数 DB_DSN が含まれているか確認する (spec.containers[app] には env の定義が見当たらない)",
+      "DB_DSN を env または envFrom (Secret / ConfigMap) で設定し、参照先のリソースが namespace shop に存在することを確認する",
+      "設定を修正してロールアウトし、Pod が Ready になることとログに panic が出ていないことを確認する"
+    ]
+  }
+}

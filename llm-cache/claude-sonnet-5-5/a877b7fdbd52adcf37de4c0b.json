@@ -1,0 +1,33 @@
+{
+  "model": "claude-sonnet-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 2020,
+    "output_tokens": 451
+  },
+  "result": {
+    "category": "IMAGE_PULL",
+    "subcause": null,
+    "confidence": 0.8,
+    "title": "レジストリの TLS 証明書が未知の認証局で署名されているため、イメージ取得に失敗している",
+    "evidence": [
+      {
+        "source": "status.containerStatuses[app].state.waiting.reason",
+        "text": "ImagePullBackOff"
+      },
+      {
+        "source": "event/Failed",
+        "text": "Failed to pull image \"registry.example.com/shop/api:1.4.2\": rpc error: code = Unknown desc = failed to pull and unpack image: failed to resolve reference: failed to do request: Head https://registry.example.com/v2/shop/api/manifests/1.4.2: tls: failed to verify certificate: x509: certificate signed by unknown authority"
+      },
+      {
+        "source": "status.conditions[PodScheduled]",
+        "text": "True"
+      }
+    ],
+    "actions": [
+      "レジストリ registry.example.com の証明書を発行した CA が、ノードのコンテナランタイム(containerd/CRI-O)の信頼ストアに登録されているか確認する",
+      "OpenShift の場合は image.config.openshift.io/cluster の additionalTrustedCA に CA を追加する。それ以外のクラスタではノードの CA 証明書ストアに追加する",
+      "CA 登録後に Pod を再作成し、イメージ取得が成功することを確認する"
+    ]
+  }
+}

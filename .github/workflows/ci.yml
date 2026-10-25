@@ -24,7 +24,11 @@ jobs:
         run: |
           kube-triage eval scenarios-real --min-accuracy 0.9 --report eval-real.md
           kube-triage eval scenarios --min-accuracy 0.9 --report eval-synthetic.md
+      - name: LLM 判定の再現 (コミット済みキャッシュのみ使用, API は呼ばない)
+        run: |
+          kube-triage eval scenarios-holdout --engine hybrid --model claude-haiku-5-5 --offline --min-accuracy 0.9 --report eval-holdout-hybrid.md
+          python scripts/compare_engines.py > engine-comparison.md
       - name: 評価結果をジョブサマリーに表示
         if: matrix.python-version == '3.12'
         run: |
-          { echo "## 実データ"; cat eval-real.md; echo; echo "## 合成データ"; cat eval-synthetic.md; } >> "$GITHUB_STEP_SUMMARY"
+          { echo "## 実データ"; cat eval-real.md; echo; echo "## 合成データ"; cat eval-synthetic.md; echo; cat engine-comparison.md; } >> "$GITHUB_STEP_SUMMARY"

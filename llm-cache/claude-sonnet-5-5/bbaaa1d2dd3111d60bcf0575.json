@@ -1,0 +1,37 @@
+{
+  "model": "claude-sonnet-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1960,
+    "output_tokens": 384
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": "invalid_config",
+    "confidence": 0.95,
+    "title": "設定ファイル routes.yaml の YAML 構文エラーにより起動後に異常終了を繰り返している",
+    "evidence": [
+      {
+        "source": "logs/app",
+        "text": "loading /etc/gateway/routes.yaml\nError: failed to parse config: yaml: line 12: did not find expected key"
+      },
+      {
+        "source": "status.containerStatuses[app].state.waiting",
+        "text": "CrashLoopBackOff"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState.terminated",
+        "text": "exitCode: 1, reason: Error"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "5"
+      }
+    ],
+    "actions": [
+      "/etc/gateway/routes.yaml の元となる ConfigMap やマウント内容の 12 行目付近の YAML 構文を修正する",
+      "修正前に YAML リンターやローカルでの parse でファイルが正しく読み込めることを確認する",
+      "ConfigMap 更新後に Pod を再作成し、CrashLoopBackOff が解消して Ready になることを確認する"
+    ]
+  }
+}

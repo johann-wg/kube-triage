@@ -1,0 +1,41 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 3692,
+    "output_tokens": 576
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": "dependency_unreachable",
+    "confidence": 0.9,
+    "title": "app コンテナが 127.0.0.1:6379 への接続拒否で終了を繰り返しており、接続先に到達できていないと判断",
+    "evidence": [
+      {
+        "source": "logs/app",
+        "text": "ConnectionRefusedError: [Errno 111] Connection refused"
+      },
+      {
+        "source": "spec.containers[app].command",
+        "text": "import socket; socket.create_connection(('127.0.0.1', 6379), timeout=3)"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState.terminated",
+        "text": "exitCode: 1, reason: Error"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "5"
+      },
+      {
+        "source": "event/BackOff",
+        "text": "Back-off restarting failed container app in pod crash-dependency_triage-lab"
+      }
+    ],
+    "actions": [
+      "127.0.0.1:6379 は Pod 自身のループバックを指しているため、接続先を依存サービスの Service 名や正しいホストに変更できるか確認する",
+      "接続先となるサービス（例: Redis）が同じ Pod 内の sidecar などとして存在するか、または別 Pod/Service として稼働しているか確認する",
+      "kubectl logs で起動直後のログを確認し、接続先のホスト名・ポートを設定値（環境変数や ConfigMap）と突き合わせる"
+    ]
+  }
+}

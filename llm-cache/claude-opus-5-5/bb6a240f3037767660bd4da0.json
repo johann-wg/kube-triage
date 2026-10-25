@@ -1,0 +1,37 @@
+{
+  "model": "claude-opus-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 2018,
+    "output_tokens": 407
+  },
+  "result": {
+    "category": "OOM_KILLED",
+    "subcause": null,
+    "confidence": 0.9,
+    "title": "initContainer load-index がメモリ上限超過 (OOMKilled, exitCode 137) で強制終了を繰り返し、Pod が初期化できず Pending のままになっている",
+    "evidence": [
+      {
+        "source": "status.initContainerStatuses[load-index].lastState",
+        "text": "terminated: reason=OOMKilled, exitCode=137"
+      },
+      {
+        "source": "status.initContainerStatuses[load-index].state",
+        "text": "waiting: reason=CrashLoopBackOff, restartCount=3"
+      },
+      {
+        "source": "status.conditions[Initialized]",
+        "text": "status=False, reason=ContainersNotInitialized"
+      },
+      {
+        "source": "status.containerStatuses[app].state",
+        "text": "waiting: reason=PodInitializing"
+      }
+    ],
+    "actions": [
+      "initContainer load-index の resources.limits.memory を確認し、インデックス読み込みに必要な量へ引き上げる",
+      "load-index の処理内容 (読み込むデータ量・バッチサイズ) を見直し、メモリ使用量を削減できないか確認する",
+      "kubectl logs search-indexer -c load-index --previous で終了直前のログを確認する"
+    ]
+  }
+}

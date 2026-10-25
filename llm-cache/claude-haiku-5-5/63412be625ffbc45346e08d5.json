@@ -1,0 +1,37 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 2028,
+    "output_tokens": 419
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": "dependency_unreachable",
+    "confidence": 0.85,
+    "title": "アプリが依存先 postgres-primary.shop.svc.cluster.local の名前解決に失敗し、起動直後に異常終了を繰り返している",
+    "evidence": [
+      {
+        "source": "status.containerStatuses[app].state.waiting.reason",
+        "text": "CrashLoopBackOff"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState.terminated",
+        "text": "exitCode: 1, reason: Error"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "5"
+      },
+      {
+        "source": "logs/app",
+        "text": "ERROR HikariPool-1 - Exception during pool initialization. java.net.UnknownHostException: postgres-primary.shop.svc.cluster.local"
+      }
+    ],
+    "actions": [
+      "postgres-primary サービスと Endpoints が shop namespace に存在するか確認する (kubectl get svc,endpoints -n shop postgres-primary)",
+      "Pod 内から名前解決できるか確認し、DB 側の Pod 起動状態や DNS 設定を点検する",
+      "接続先のホスト名・ポート設定が正しいか (ConfigMap/環境変数) 確認する"
+    ]
+  }
+}

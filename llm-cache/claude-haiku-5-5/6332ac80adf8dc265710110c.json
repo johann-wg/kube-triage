@@ -1,0 +1,37 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1986,
+    "output_tokens": 367
+  },
+  "result": {
+    "category": "OOM_KILLED",
+    "subcause": null,
+    "confidence": 0.95,
+    "title": "直前の終了理由が OOMKilled のため、メモリ上限超過による再起動の繰り返しと判定",
+    "evidence": [
+      {
+        "source": "status.containerStatuses[app].lastState.terminated",
+        "text": "exitCode: 137, reason: OOMKilled, finishedAt: 2026-10-25T09:00:00Z"
+      },
+      {
+        "source": "status.containerStatuses[app].state.waiting",
+        "text": "reason: CrashLoopBackOff, message: back-off 2m40s restarting failed container"
+      },
+      {
+        "source": "status.containerStatuses[app]",
+        "text": "restartCount: 5"
+      },
+      {
+        "source": "spec.containers[app].resources.limits",
+        "text": "memory: 128Mi"
+      }
+    ],
+    "actions": [
+      "kubectl describe pod api-oom -n shop で直前の終了理由と発生時刻を確認する",
+      "アプリケーションのメモリ使用量を確認し、memory limit (128Mi) が適切か見直す",
+      "メモリリークの有無をプロファイリングなどで調査する"
+    ]
+  }
+}

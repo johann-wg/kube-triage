@@ -1,0 +1,41 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 2010,
+    "output_tokens": 639
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": "permission",
+    "confidence": 0.7,
+    "title": "起動時に /app/cache への書き込みに失敗し、コンテナが終了を繰り返している (読み取り専用ファイルシステム)",
+    "evidence": [
+      {
+        "source": "logs/app",
+        "text": "OSError: [Errno 30] Read-only file system: '/app/cache'"
+      },
+      {
+        "source": "logs/app",
+        "text": "File \"/app/worker.py\", line 10, in <module> os.makedirs(CACHE_DIR, exist_ok=True)"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState.terminated",
+        "text": "exitCode: 1, reason: Error"
+      },
+      {
+        "source": "status.containerStatuses[app].state.waiting",
+        "text": "reason: CrashLoopBackOff"
+      },
+      {
+        "source": "status.containerStatuses[app]",
+        "text": "restartCount: 5, ready: false"
+      }
+    ],
+    "actions": [
+      "Pod spec の securityContext.readOnlyRootFilesystem の設定を確認し、/app/cache を書き込み可能にする (emptyDir などの volume を마운트する) ことを検討する",
+      "コンテナ実行ユーザーと /app/cache のディレクトリ権限・所有者が書き込み可能か確認する",
+      "イメージ registry.example.com/shop/api:1.4.2 が想定どおりのキャッシュディレクトリ構成か確認する"
+    ]
+  }
+}

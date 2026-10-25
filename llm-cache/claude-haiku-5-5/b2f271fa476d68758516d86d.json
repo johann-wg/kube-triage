@@ -1,0 +1,41 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 3612,
+    "output_tokens": 650
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": "bad_command",
+    "confidence": 0.92,
+    "title": "command の実行ファイル名 \"pythn\" が誤りで、コンテナ起動に失敗し再起動を繰り返している",
+    "evidence": [
+      {
+        "source": "spec.containers[app].command",
+        "text": "[\"pythn\", \"app.py\"]"
+      },
+      {
+        "source": "event/Failed",
+        "text": "exec: \"pythn\": executable file not found in $PATH"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState.terminated",
+        "text": "exitCode: 128, reason: StartError, message: exec: \"pythn\": executable file not found in $PATH"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "5"
+      },
+      {
+        "source": "event/BackOff",
+        "text": "Back-off restarting failed container app in pod crash-bad-command_triage-lab(...)"
+      }
+    ],
+    "actions": [
+      "spec.containers[app].command の \"pythn\" を \"python\" に修正する",
+      "イメージ python:3.12-alpine 内で python が実行可能か確認する (例: kubectl run で python --version を実行)",
+      "修正後に Pod を再作成し、status.containerStatuses[app].ready が true になり restartCount が増えないことを確認する"
+    ]
+  }
+}

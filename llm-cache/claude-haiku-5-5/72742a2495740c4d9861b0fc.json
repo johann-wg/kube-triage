@@ -1,0 +1,45 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 2109,
+    "output_tokens": 740
+  },
+  "result": {
+    "category": "PROBE_FAILURE",
+    "subcause": "liveness",
+    "confidence": 0.85,
+    "title": "Liveness probe の HTTP タイムアウトが繰り返し発生し、kubelet がコンテナを再起動している",
+    "evidence": [
+      {
+        "source": "events[0] reason=Unhealthy",
+        "text": "Liveness probe failed: Get \"http://10.128.4.21:8080/actuator/health\": context deadline exceeded (Client.Timeout exceeded while awaiting headers) (count=9)"
+      },
+      {
+        "source": "events[1] reason=Killing",
+        "text": "Container app failed liveness probe, will be restarted (count=3)"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "3"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState.terminated",
+        "text": "exitCode=137, reason=Error (OOMKilled ではない)"
+      },
+      {
+        "source": "logs/app",
+        "text": "INFO generating monthly report batch=2026-09 rows=1830212"
+      },
+      {
+        "source": "status.conditions",
+        "text": "PodScheduled=True, Ready=False"
+      }
+    ],
+    "actions": [
+      "app コンテナのヘルスチェック用エンドポイント /actuator/health の応答が遅延する原因を確認する（レポート生成処理との CPU/スレッド競合など）",
+      "livenessProbe の timeoutSeconds・periodSeconds・initialDelaySeconds の妥当性を見直し、必要に応じて緩和する",
+      "レポート生成バッチを別 Pod やジョブに分離し、API の健全性チェックへの影響を避ける"
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "model": "claude-sonnet-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1944,
+    "output_tokens": 377
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": "bad_command",
+    "confidence": 0.95,
+    "title": "起動スクリプト ./bin/start.sh が見つからず (exit code 127) CrashLoopBackOff になっている",
+    "evidence": [
+      {
+        "source": "logs/app",
+        "text": "/bin/sh: 1: ./bin/start.sh: not found"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState.terminated",
+        "text": "exitCode: 127, reason: Error"
+      },
+      {
+        "source": "status.containerStatuses[app].state.waiting",
+        "text": "reason: CrashLoopBackOff"
+      },
+      {
+        "source": "status.containerStatuses[app]",
+        "text": "restartCount: 5"
+      }
+    ],
+    "actions": [
+      "Pod の command/args と作業ディレクトリ (workingDir) が正しいか確認し、./bin/start.sh のパスを修正する",
+      "イメージ registry.example.com/shop/api:1.4.2 の中に bin/start.sh が存在し、実行権限があるか確認する",
+      "Pod 名 legacy-batch に対してイメージが適切か (api イメージを使っていないか) を見直す"
+    ]
+  }
+}

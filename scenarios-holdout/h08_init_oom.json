@@ -1,0 +1,79 @@
+{
+  "description": "initContainer (データ展開) がメモリ上限を超えて OOMKilled",
+  "expected": {
+    "category": "OOM_KILLED",
+    "subcause": null
+  },
+  "pod": {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "search-indexer",
+      "namespace": "shop"
+    },
+    "spec": {
+      "containers": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2",
+          "resources": {
+            "limits": {
+              "memory": "256Mi",
+              "cpu": "500m"
+            }
+          }
+        }
+      ]
+    },
+    "status": {
+      "phase": "Pending",
+      "conditions": [
+        {
+          "type": "PodScheduled",
+          "status": "True"
+        },
+        {
+          "type": "Initialized",
+          "status": "False",
+          "reason": "ContainersNotInitialized"
+        }
+      ],
+      "initContainerStatuses": [
+        {
+          "name": "load-index",
+          "ready": false,
+          "restartCount": 3,
+          "state": {
+            "waiting": {
+              "reason": "CrashLoopBackOff"
+            }
+          },
+          "lastState": {
+            "terminated": {
+              "reason": "OOMKilled",
+              "exitCode": 137,
+              "finishedAt": "2026-10-25T09:00:00Z"
+            }
+          }
+        }
+      ],
+      "containerStatuses": [
+        {
+          "name": "app",
+          "image": "registry.example.com/shop/api:1.4.2",
+          "ready": false,
+          "restartCount": 0,
+          "state": {
+            "waiting": {
+              "reason": "PodInitializing",
+              "message": ""
+            }
+          },
+          "lastState": {}
+        }
+      ]
+    }
+  },
+  "events": [],
+  "logs": {}
+}

@@ -1,0 +1,37 @@
+{
+  "model": "claude-opus-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1964,
+    "output_tokens": 412
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": "dependency_unreachable",
+    "confidence": 0.88,
+    "title": "DB (10.96.14.7:5432) への接続がタイムアウトし、初期化に失敗したコンテナが CrashLoopBackOff を繰り返しています。",
+    "evidence": [
+      {
+        "source": "status.containerStatuses[app].state",
+        "text": "waiting.reason: CrashLoopBackOff"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState",
+        "text": "terminated: exitCode 1, reason Error"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "5"
+      },
+      {
+        "source": "logs/app",
+        "text": "level=error msg=\"db init failed\" err=\"dial tcp 10.96.14.7:5432: i/o timeout\""
+      }
+    ],
+    "actions": [
+      "10.96.14.7 に対応する DB の Service が存在し、Endpoints にバックエンド Pod が登録されているか確認する (kubectl get svc,endpoints -n shop)",
+      "DB の Pod が稼働しポート 5432 で待ち受けているか確認する",
+      "NetworkPolicy などで shop namespace から DB へのポート 5432 の通信が遮断されていないか確認する"
+    ]
+  }
+}

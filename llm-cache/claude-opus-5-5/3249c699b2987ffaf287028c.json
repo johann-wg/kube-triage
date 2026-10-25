@@ -1,0 +1,41 @@
+{
+  "model": "claude-opus-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1960,
+    "output_tokens": 415
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": "invalid_config",
+    "confidence": 0.93,
+    "title": "設定ファイル /etc/gateway/routes.yaml の YAML 構文エラーにより、コンテナが起動直後に異常終了を繰り返しています。",
+    "evidence": [
+      {
+        "source": "logs/app",
+        "text": "Error: failed to parse config: yaml: line 12: did not find expected key"
+      },
+      {
+        "source": "logs/app",
+        "text": "loading /etc/gateway/routes.yaml"
+      },
+      {
+        "source": "status.containerStatuses[app].state",
+        "text": "waiting: reason: CrashLoopBackOff"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState",
+        "text": "terminated: exitCode: 1, reason: Error"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "5"
+      }
+    ],
+    "actions": [
+      "/etc/gateway/routes.yaml の供給元 (ConfigMap など) を確認し、12 行目付近のインデントやキーの記述ミスを修正する",
+      "修正した YAML を yamllint などで構文チェックしてから反映し、Pod を再起動する",
+      "直近の設定変更履歴を確認し、必要に応じて前回の正常な設定にロールバックする"
+    ]
+  }
+}

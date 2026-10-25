@@ -1,0 +1,33 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1790,
+    "output_tokens": 337
+  },
+  "result": {
+    "category": "UNSCHEDULABLE",
+    "subcause": "pvc_unbound",
+    "confidence": 0.9,
+    "title": "PersistentVolumeClaim が未バインドのため Pod をスケジュールできない",
+    "evidence": [
+      {
+        "source": "status.conditions[PodScheduled]",
+        "text": "reason: Unschedulable, status: False, message: 0/3 nodes are available: pod has unbound immediate PersistentVolumeClaims."
+      },
+      {
+        "source": "pod.phase",
+        "text": "Pending"
+      },
+      {
+        "source": "status.containerStatuses",
+        "text": "[] (コンテナ未作成)"
+      }
+    ],
+    "actions": [
+      "対象namespace shop の PVC 一覧を確認し、db-0 が参照する PVC の STATUS が Bound になっているか確認する",
+      "PVC が Pending の場合、StorageClass の存在・プロビジョナーの稼働状態・容量不足を確認する",
+      "PVC の events (kubectl describe pvc) で ProvisioningFailed などのエラー有無を確認する"
+    ]
+  }
+}

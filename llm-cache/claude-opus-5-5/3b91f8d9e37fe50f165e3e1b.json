@@ -1,0 +1,33 @@
+{
+  "model": "claude-opus-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1874,
+    "output_tokens": 334
+  },
+  "result": {
+    "category": "CONFIG_ERROR",
+    "subcause": "missing_key",
+    "confidence": 0.95,
+    "title": "Secret shop/db-credentials にキー db-password が存在しないため、コンテナを作成できず CreateContainerConfigError になっています。",
+    "evidence": [
+      {
+        "source": "status.containerStatuses[app].state.waiting.reason",
+        "text": "CreateContainerConfigError"
+      },
+      {
+        "source": "status.containerStatuses[app].state.waiting.message",
+        "text": "couldn't find key db-password in Secret shop/db-credentials"
+      },
+      {
+        "source": "status.conditions[PodScheduled]",
+        "text": "True"
+      }
+    ],
+    "actions": [
+      "oc get secret db-credentials -n shop -o jsonpath='{.data}' で Secret に含まれるキー名を確認する",
+      "Secret にキー db-password を追加するか、Pod (Deployment) の secretKeyRef のキー名を実在するキーに修正する",
+      "修正後に Pod を再作成し、コンテナが Running になることを確認する"
+    ]
+  }
+}

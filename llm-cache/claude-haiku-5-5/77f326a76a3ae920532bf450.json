@@ -1,0 +1,48 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1935,
+    "output_tokens": 810
+  },
+  "result": {
+    "category": "HEALTHY",
+    "subcause": null,
+    "confidence": 0.6,
+    "title": "現在は Running かつ Ready で、ログもヘルスチェック成功を示しているため異常なしと判定します。ただし過去に exitCode 1 の再起動が 1 回あります。",
+    "evidence": [
+      {
+        "source": "status.conditions",
+        "text": "type=Ready, status=True"
+      },
+      {
+        "source": "status.containerStatuses[app].state",
+        "text": "running.startedAt=2026-10-19T03:12:00Z"
+      },
+      {
+        "source": "status.containerStatuses[app].ready",
+        "text": "true"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "1"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState.terminated",
+        "text": "exitCode=1, reason=Error, finishedAt=2026-10-25T09:00:00Z"
+      },
+      {
+        "source": "logs/app",
+        "text": "INFO listening on :8080 / INFO health check ok"
+      },
+      {
+        "source": "events",
+        "text": "[]"
+      }
+    ],
+    "actions": [
+      "lastState の終了時刻 (2026-10-25T09:00:00Z) が現在の startedAt (2026-10-19T03:12:00Z) より後になっており時刻の整合性が取れないため、kubectl describe pod や kubectl logs --previous で前回終了時のログと実際の再起動時刻を確認する",
+      "exitCode=1 の再起動が再発していないか、restartCount の推移を監視する"
+    ]
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 3581,
+    "output_tokens": 451
+  },
+  "result": {
+    "category": "OOM_KILLED",
+    "subcause": null,
+    "confidence": 0.95,
+    "title": "メモリ上限64Miを超えるメモリ確保によりコンテナが OOMKilled で強制終了を繰り返している",
+    "evidence": [
+      {
+        "source": "status.containerStatuses[app].state.terminated",
+        "text": "reason: OOMKilled, exitCode: 137"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState.terminated",
+        "text": "reason: OOMKilled, exitCode: 137"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "5"
+      },
+      {
+        "source": "spec.containers[app].resources.limits.memory",
+        "text": "64Mi"
+      },
+      {
+        "source": "spec.containers[app].command",
+        "text": "b = bytearray(300 * 1024 * 1024); import time; time.sleep(3600)"
+      },
+      {
+        "source": "event/BackOff",
+        "text": "Back-off restarting failed container app in pod oom_triage-lab(8967c04c-4d5d-43ac-8cd4-4753d96ffe16)"
+      }
+    ],
+    "actions": [
+      "spec.containers[app].resources.limits.memory を、アプリが必要とする量（今回の確保量 300Mi 以上）を上回る値に引き上げる",
+      "アプリケーションのメモリ使用量を見直し、不要な大容量メモリ確保を削減する"
+    ]
+  }
+}

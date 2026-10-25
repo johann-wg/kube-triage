@@ -1,0 +1,41 @@
+{
+  "model": "claude-sonnet-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 2018,
+    "output_tokens": 477
+  },
+  "result": {
+    "category": "OOM_KILLED",
+    "subcause": null,
+    "confidence": 0.9,
+    "title": "initContainer load-index がメモリ上限超過 (OOMKilled) で終了を繰り返し、Pod の初期化が完了していない",
+    "evidence": [
+      {
+        "source": "status.initContainerStatuses[load-index].lastState.terminated",
+        "text": "\"exitCode\": 137, \"reason\": \"OOMKilled\""
+      },
+      {
+        "source": "status.initContainerStatuses[load-index].state.waiting",
+        "text": "\"reason\": \"CrashLoopBackOff\""
+      },
+      {
+        "source": "status.initContainerStatuses[load-index].restartCount",
+        "text": "3"
+      },
+      {
+        "source": "status.conditions[Initialized]",
+        "text": "\"reason\": \"ContainersNotInitialized\", \"status\": \"False\""
+      },
+      {
+        "source": "status.containerStatuses[app].state.waiting",
+        "text": "\"reason\": \"PodInitializing\""
+      }
+    ],
+    "actions": [
+      "initContainer load-index の memory limit を引き上げ、実際のメモリ使用量に見合った値に設定する",
+      "load-index の処理 (インデックス読み込み) のメモリ使用量を確認し、分割処理やバッチサイズ縮小などで削減できないか検討する",
+      "spec に load-index の定義とリソース設定が表示されていないため、Pod マニフェストと LimitRange/ResourceQuota の設定を確認する"
+    ]
+  }
+}

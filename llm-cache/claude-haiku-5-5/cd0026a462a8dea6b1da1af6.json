@@ -1,0 +1,37 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 3157,
+    "output_tokens": 366
+  },
+  "result": {
+    "category": "CONFIG_ERROR",
+    "subcause": "missing_configmap",
+    "confidence": 0.95,
+    "title": "envFrom で参照している ConfigMap api-config が存在しないため、コンテナを作成できない",
+    "evidence": [
+      {
+        "source": "status.containerStatuses[app].state.waiting",
+        "text": "reason: CreateContainerConfigError, message: configmap \"api-config\" not found"
+      },
+      {
+        "source": "events/Failed",
+        "text": "Error: configmap \"api-config\" not found (count: 20)"
+      },
+      {
+        "source": "spec.containers[app].envFrom",
+        "text": "configMapRef.name: api-config"
+      },
+      {
+        "source": "status.conditions[Ready]",
+        "text": "reason: ContainersNotReady, message: containers with unready status: [app]"
+      }
+    ],
+    "actions": [
+      "kubectl -n triage-lab get configmap api-config で ConfigMap の存在を確認する",
+      "envFrom の参照名 api-config が正しいか Deployment/Pod spec と照合する",
+      "ConfigMap が存在しない場合は作成するか、参照先を正しい名前に修正して Pod を再作成する"
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1868,
+    "output_tokens": 317
+  },
+  "result": {
+    "category": "CONFIG_ERROR",
+    "subcause": "missing_secret",
+    "confidence": 0.95,
+    "title": "存在しない Secret db-credentials を参照しているためコンテナが作成できない",
+    "evidence": [
+      {
+        "source": "status.containerStatuses[app].state.waiting.reason",
+        "text": "CreateContainerConfigError"
+      },
+      {
+        "source": "status.containerStatuses[app].state.waiting.message",
+        "text": "secret \"db-credentials\" not found"
+      },
+      {
+        "source": "status.conditions[PodScheduled]",
+        "text": "status: True"
+      }
+    ],
+    "actions": [
+      "namespace shop に Secret db-credentials が存在するか確認する (kubectl -n shop get secret db-credentials)",
+      "Secret 名の綴りや参照元 (envFrom / env.valueFrom.secretKeyRef) の設定が正しいか確認する",
+      "Secret を作成するか、Pod が参照する Secret 名を既存のものに修正して再デプロイする"
+    ]
+  }
+}

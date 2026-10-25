@@ -1,0 +1,36 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 2472,
+    "output_tokens": 317
+  },
+  "result": {
+    "category": "UNSCHEDULABLE",
+    "subcause": "pvc_unbound",
+    "confidence": 0.9,
+    "title": "PVC data が未バインドのため Pod をスケジュールできない",
+    "evidence": [
+      {
+        "source": "events[0].reason",
+        "text": "FailedScheduling"
+      },
+      {
+        "source": "events[0].message",
+        "text": "0/1 nodes are available: pod has unbound immediate PersistentVolumeClaims. not found"
+      },
+      {
+        "source": "status.conditions[PodScheduled].reason",
+        "text": "Unschedulable"
+      },
+      {
+        "source": "spec.volumes[data].persistentVolumeClaim.claimName",
+        "text": "data"
+      }
+    ],
+    "actions": [
+      "namespace triage-lab に PVC data が存在するか確認する (kubectl get pvc -n triage-lab)",
+      "PVC の status が Bound にならない原因を確認する (StorageClass の存在・プロビジョナー・PV の空き状況を kubectl describe pvc で確認)"
+    ]
+  }
+}

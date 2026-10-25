@@ -1,0 +1,40 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1999,
+    "output_tokens": 395
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": "missing_env",
+    "confidence": 0.92,
+    "title": "必須環境変数 DATABASE_URL が未定義のため、起動直後に異常終了を繰り返している",
+    "evidence": [
+      {
+        "source": "logs/app",
+        "text": "KeyError: 'DATABASE_URL' (main.py line 8: DB_URL = os.environ[\"DATABASE_URL\"])"
+      },
+      {
+        "source": "status.containerStatuses[app].state",
+        "text": "waiting.reason: CrashLoopBackOff"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState.terminated",
+        "text": "exitCode: 1, reason: Error"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "6"
+      },
+      {
+        "source": "events",
+        "text": "空配列のため、イメージ取得・スケジュール・プローブ関連のイベントは確認できない"
+      }
+    ],
+    "actions": [
+      "spec.containers[app].env / envFrom に DATABASE_URL が設定されているか確認し、未設定であれば追加する",
+      "DATABASE_URL を参照する ConfigMap / Secret を使う場合は、その参照先と key が存在するか確認する"
+    ]
+  }
+}

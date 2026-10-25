@@ -1,0 +1,40 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1955,
+    "output_tokens": 372
+  },
+  "result": {
+    "category": "IMAGE_PULL",
+    "subcause": "registry_auth",
+    "confidence": 0.95,
+    "title": "プライベートレジストリへのイメージ取得が認証エラー(401)で失敗しており、コンテナが起動できていない",
+    "evidence": [
+      {
+        "source": "events[0].message",
+        "text": "Failed to pull image \"registry.example.com/shop/api:1.4.2\": failed to authorize: failed to fetch oauth token: unexpected status: 401 Unauthorized"
+      },
+      {
+        "source": "events[0].count",
+        "text": "3"
+      },
+      {
+        "source": "status.containerStatuses[app].state.waiting.reason",
+        "text": "ErrImagePull"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "0"
+      },
+      {
+        "source": "status.conditions[Ready]",
+        "text": "status False"
+      }
+    ],
+    "actions": [
+      "Pod の namespace (shop) で imagePullSecrets が指定されているか、対象 ServiceAccount に紐づいているか確認する",
+      "指定中の pull secret の認証情報(ユーザー名・トークン)が有効か、レジストリ側で権限があるかを確認する"
+    ]
+  }
+}

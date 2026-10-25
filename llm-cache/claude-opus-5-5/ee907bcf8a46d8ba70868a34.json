@@ -1,0 +1,37 @@
+{
+  "model": "claude-opus-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1944,
+    "output_tokens": 444
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": "bad_command",
+    "confidence": 0.93,
+    "title": "起動スクリプト ./bin/start.sh がイメージ内に見つからず (exit 127)、コンテナが CrashLoopBackOff を繰り返しています。",
+    "evidence": [
+      {
+        "source": "logs/app",
+        "text": "/bin/sh: 1: ./bin/start.sh: not found"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState",
+        "text": "exitCode: 127, reason: Error"
+      },
+      {
+        "source": "status.containerStatuses[app].state",
+        "text": "waiting.reason: CrashLoopBackOff"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "5"
+      }
+    ],
+    "actions": [
+      "イメージ registry.example.com/shop/api:1.4.2 に ./bin/start.sh が存在するか、作業ディレクトリ (WORKDIR) と合わせて確認する (例: 別イメージタグとの差分や Dockerfile を確認)",
+      "Deployment 等の command/args または Dockerfile の ENTRYPOINT/CMD で指定しているスクリプトパスを正しいものに修正する",
+      "legacy-batch 用として想定しているイメージが api:1.4.2 で正しいか (イメージ指定の誤りでないか) を確認する"
+    ]
+  }
+}

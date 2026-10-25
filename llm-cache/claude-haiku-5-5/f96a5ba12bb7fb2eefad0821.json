@@ -1,0 +1,40 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 2498,
+    "output_tokens": 432
+  },
+  "result": {
+    "category": "UNSCHEDULABLE",
+    "subcause": "node_selector",
+    "confidence": 0.95,
+    "title": "nodeSelector の disktype=nvme-does-not-exist に一致するノードが存在しないため、Pod がスケジュールされていない",
+    "evidence": [
+      {
+        "source": "spec.nodeSelector",
+        "text": "disktype: nvme-does-not-exist"
+      },
+      {
+        "source": "status.conditions[PodScheduled].reason",
+        "text": "Unschedulable"
+      },
+      {
+        "source": "status.conditions[PodScheduled].message",
+        "text": "0/1 nodes are available: 1 node(s) didn't match Pod's node affinity/selector."
+      },
+      {
+        "source": "event/FailedScheduling",
+        "text": "0/1 nodes are available: 1 node(s) didn't match Pod's node affinity/selector. preemption: 0/1 nodes are available: 1 Preemption is not helpful for scheduling."
+      },
+      {
+        "source": "status.containerStatuses",
+        "text": "[] (コンテナが未作成)"
+      }
+    ],
+    "actions": [
+      "kubectl get nodes --show-labels で disktype ラベルを持つノードの有無を確認する",
+      "nodeSelector の値をクラスタ内に存在するラベル値に修正するか、対象ノードに disktype=nvme-does-not-exist ラベルを付与する"
+    ]
+  }
+}

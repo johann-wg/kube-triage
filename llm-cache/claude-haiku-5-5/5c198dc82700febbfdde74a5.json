@@ -1,0 +1,40 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 2470,
+    "output_tokens": 319
+  },
+  "result": {
+    "category": "UNSCHEDULABLE",
+    "subcause": "insufficient_resources",
+    "confidence": 0.95,
+    "title": "要求メモリ 500Gi を満たすノードがなく、Pod がスケジュールできていない",
+    "evidence": [
+      {
+        "source": "events[0].message",
+        "text": "0/1 nodes are available: 1 Insufficient memory. preemption: 0/1 nodes are available: 1 Preemption is not helpful for scheduling."
+      },
+      {
+        "source": "events[0].reason",
+        "text": "FailedScheduling"
+      },
+      {
+        "source": "spec.containers[app].resources.requests.memory",
+        "text": "500Gi"
+      },
+      {
+        "source": "status.conditions[PodScheduled].reason",
+        "text": "Unschedulable"
+      },
+      {
+        "source": "pod.phase",
+        "text": "Pending"
+      }
+    ],
+    "actions": [
+      "kubectl describe node でノードの allocatable メモリを確認する",
+      "spec.containers[app].resources.requests.memory を実際に必要な値へ見直す"
+    ]
+  }
+}

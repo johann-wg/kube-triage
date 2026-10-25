@@ -1,0 +1,36 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 2002,
+    "output_tokens": 324
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": "missing_env",
+    "confidence": 0.9,
+    "title": "必須環境変数 DB_DSN が未設定のためアプリが起動直後に panic で終了し、CrashLoopBackOff になっている",
+    "evidence": [
+      {
+        "source": "logs/app",
+        "text": "panic: required setting DB_DSN is empty; set it via environment"
+      },
+      {
+        "source": "status.containerStatuses[app].state.waiting",
+        "text": "reason: CrashLoopBackOff"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState.terminated",
+        "text": "exitCode: 2, reason: Error"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "5"
+      }
+    ],
+    "actions": [
+      "Deployment や Pod spec の env / envFrom に DB_DSN が正しく定義されているか確認する",
+      "DB_DSN の参照元 (Secret や ConfigMap) が存在し、キー名が一致しているか確認する"
+    ]
+  }
+}

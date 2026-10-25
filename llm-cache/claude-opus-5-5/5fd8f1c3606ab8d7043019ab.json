@@ -1,0 +1,40 @@
+{
+  "model": "claude-opus-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 1986,
+    "output_tokens": 433
+  },
+  "result": {
+    "category": "CRASH_LOOP",
+    "subcause": "bad_command",
+    "confidence": 0.6,
+    "title": "コンテナ app が Python モジュール fastapi を読み込めず終了コード 1 で異常終了し、CrashLoopBackOff になっています（イメージ内容の不備の可能性が高い）。",
+    "evidence": [
+      {
+        "source": "status.containerStatuses[app].state",
+        "text": "waiting: reason=CrashLoopBackOff"
+      },
+      {
+        "source": "status.containerStatuses[app].lastState",
+        "text": "terminated: exitCode=1, reason=Error"
+      },
+      {
+        "source": "status.containerStatuses[app].restartCount",
+        "text": "5"
+      },
+      {
+        "source": "logs/app",
+        "text": "ModuleNotFoundError: No module named 'fastapi'"
+      },
+      {
+        "source": "spec.containers[app].image",
+        "text": "registry.example.com/shop/api:1.4.2"
+      }
+    ],
+    "actions": [
+      "指定イメージ registry.example.com/shop/api:1.4.2 が ml-scorer 用の正しいイメージか確認する（serve.py を実行するイメージと API イメージを取り違えていないか）",
+      "イメージのビルド定義（requirements.txt / Dockerfile）に fastapi が含まれているか確認し、必要なら追加して再ビルド・再デプロイする"
+    ]
+  }
+}
